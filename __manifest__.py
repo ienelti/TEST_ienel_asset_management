@@ -1,0 +1,26 @@
+{
+    'name': 'Gestion de Activos Fijos IENEL',
+    'version': '19.0.1.0.0',
+    'category': 'Operations/Assets',
+    'summary': 'Modulo principal para la gestion individual de activos fijos IENEL.',
+    'author': 'IENEL TI',
+    'license': 'LGPL-3',
+    'depends': [
+        'base',
+        'product',
+        'stock',
+        'account',
+        'analytic',
+        'hr',
+    ],
+    'data': [
+        'security/ienel_asset_security.xml',
+        'security/ir.model.access.csv',
+        'data/ienel_asset_sequence.xml',
+        'views/ienel_asset_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/menu_views.xml',
+    ],
+    'application': True,
+    'installable': True,
+}

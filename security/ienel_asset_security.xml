@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="module_category_ienel_asset" model="ir.module.category">
+            <field name="name">Gestion de Activos Fijos</field>
+            <field name="description">Categoria de seguridad para la administracion de activos fijos IENEL.</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record id="group_ienel_asset_user" model="res.groups">
+            <field name="name">Usuario de Activos Fijos</field>
+            <field name="category_id" ref="module_category_ienel_asset"/>
+            <field name="comment">Acceso de lectura y registro de activos fijos.</field>
+        </record>
+
+        <record id="group_ienel_asset_manager" model="res.groups">
+            <field name="name">Administrador de Activos Fijos</field>
+            <field name="category_id" ref="module_category_ienel_asset"/>
+            <field name="implied_ids" eval="[(4, ref('group_ienel_asset_user'))]"/>
+            <field name="comment">Control total sobre configuracion y gestion de activos fijos.</field>
+        </record>
+    </data>
+</odoo>

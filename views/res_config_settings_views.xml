@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_ienel_asset" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.ienel.asset</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Activos Fijos IENEL" string="Activos Fijos" name="ienel_asset_management">
+                    <block title="Configuracion de Umbral Contable (UVT)">
+                        <setting id="uvt_settings" title="Parametros UVT" help="Define el valor del UVT en COP y la cantidad limite para exigir la creacion de un activo contable.">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="uvt_value" class="col-lg-4 o_light_label"/>
+                                    <field name="uvt_value" widget="monetary"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="uvt_threshold_qty" class="col-lg-4 o_light_label"/>
+                                    <field name="uvt_threshold_qty"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="uvt_threshold_amount" class="col-lg-4 o_light_label"/>
+                                    <field name="uvt_threshold_amount" widget="monetary" class="fw-bold text-primary"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_ienel_asset_config_settings" model="ir.actions.act_window">
+        <field name="name">Ajustes - Activos Fijos</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'ienel_asset_management'}</field>
+    </record>
+</odoo>
