@@ -1,147 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vista de Búsqueda -->
+    <record id="view_ienel_asset_search" model="ir.ui.view">
+        <field name="name">ienel.asset.search</field>
+        <field name="model">ienel.asset</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Activos Fijos">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="product_id"/>
+                <field name="serial_id"/>
+                <field name="employee_id"/>
+                <field name="analytic_account_id"/>
+                <field name="product_category_id"/>
+                
+                <filter string="Archivados" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                
+                <group string="Agrupar por">
+                    <filter string="Categoría de Producto" name="group_category" context="{'group_by': 'product_category_id'}"/>
+                    <filter string="Persona a Cargo" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Centro de Costos" name="group_analytic" context="{'group_by': 'analytic_account_id'}"/>
+                    <filter string="Ubicación" name="group_location" context="{'group_by': 'location_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista de Lista -->
+    <record id="view_ienel_asset_tree" model="ir.ui.view">
+        <field name="name">ienel.asset.list</field>
+        <field name="model">ienel.asset</field>
+        <field name="arch" type="xml">
+            <list string="Activos Fijos">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="serial_id"/>
+                <field name="employee_id"/>
+                <field name="analytic_account_id"/>
+                <field name="location_id"/>
+                <field name="purchase_value" sum="Total Costo"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de Formulario -->
     <record id="view_ienel_asset_form" model="ir.ui.view">
         <field name="name">ienel.asset.form</field>
         <field name="model">ienel.asset</field>
         <field name="arch" type="xml">
             <form string="Activo Fijo">
-                <header>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,in_use,maintenance,written_off"/>
-                </header>
                 <sheet>
-                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_1920'}"/>
+                    <div class="alert alert-warning text-center" role="alert" invisible="not requires_accounting_asset">
+                        <strong>¡Atención Contable!</strong> El valor de este activo supera el umbral configurado en UVT. Se requiere vincular o registrar un Activo Contable.
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
-                        <label for="name" string="Codigo Unico (Almacen)"/>
                         <h1>
-                            <field name="name" placeholder="Codigo Unico..."/>
+                            <field name="code" readonly="1"/>
                         </h1>
+                        <h2>
+                            <field name="name" placeholder="Nombre / Descripción del Activo"/>
+                        </h2>
                     </div>
-
-                    <field name="requires_accounting_asset" invisible="1"/>
-                    <div class="alert alert-warning d-flex align-items-center mb-3" role="alert" invisible="not requires_accounting_asset">
-                        <i class="fa fa-exclamation-triangle me-2 fs-4"></i>
-                        <div>
-                            <strong>Umbral Contable Superado:</strong>
-                            <field name="uvt_warning_message" readonly="1" class="fw-bold"/>
-                        </div>
-                    </div>
-
+                    <group>
+                        <group string="Información del Producto">
+                            <field name="product_id"/>
+                            <field name="brand"/>
+                            <field name="reference"/>
+                            <field name="product_category_id"/>
+                            <field name="serial_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                        </group>
+                        <group string="Asignación y Ubicación">
+                            <field name="employee_id"/>
+                            <field name="analytic_account_id"/>
+                            <field name="location_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Valoración y Contabilidad">
+                            <field name="purchase_value"/>
+                            <field name="requires_accounting_asset" invisible="1"/>
+                        </group>
+                    </group>
                     <notebook>
-                        <page string="Informacion General" name="general_info">
-                            <group>
-                                <group string="Datos del Producto">
-                                    <field name="product_id" options="{'no_create_edit': False}"/>
-                                    <field name="brand_name"/>
-                                    <field name="product_ref"/>
-                                    <field name="asset_type_id"/>
-                                    <field name="list_price" widget="monetary"/>
-                                </group>
-                                <group string="Trazabilidad y Ubicacion">
-                                    <field name="lot_id" options="{'no_create': True}"/>
-                                    <field name="location_id"/>
-                                    <field name="active" widget="boolean_toggle"/>
-                                </group>
-                            </group>
-                        </page>
-
-                        <page string="Asignacion y Valoracion" name="assignment_value">
-                            <group>
-                                <group string="Responsable / Custodia">
-                                    <field name="employee_id"/>
-                                    <field name="employee_assignment_date"/>
-                                    <field name="company_id" groups="base.group_multi_company"/>
-                                </group>
-                                <group string="Centro de Costos y Valor">
-                                    <field name="analytic_account_id"/>
-                                    <field name="analytic_assignment_date"/>
-                                    <field name="cost_value" widget="monetary"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="uvt_threshold_amount" widget="monetary" readonly="1"/>
-                                </group>
-                            </group>
-                        </page>
-
-                        <page string="Pertenencias (Comodatos)" name="assignments">
-                            <p class="text-muted">
-                                <em>La gestion de contratos de comodato y paz y salvo se activara en la Sub-entrega 1.2.</em>
-                            </p>
-                        </page>
-
-                        <page string="Gestion Documental" name="documents">
-                            <p class="text-muted">
-                                <em>La gestion documental integrada (Hoja de Vida, Ficha Tecnica, Manuales) se activara en la Sub-entrega 1.2.</em>
-                            </p>
-                        </page>
-
-                        <page string="Calibraciones" name="calibrations">
-                            <p class="text-muted">
-                                <em>El control de calibraciones y alertas de vencimiento se activara en la Sub-entrega 1.3.</em>
-                            </p>
-                        </page>
-
-                        <page string="Mantenimientos" name="maintenances">
-                            <p class="text-muted">
-                                <em>El registro de mantenimientos preventivos y correctivos se activara en la Sub-entrega 1.3.</em>
-                            </p>
-                        </page>
-
-                        <page string="Notas" name="notes">
-                            <field name="notes" placeholder="Agregue notas u observaciones sobre la condicion fisica o historial del activo..."/>
+                        <page string="Notas e Historial">
+                            <field name="notes" placeholder="Observaciones generales sobre el estado del activo..."/>
                         </page>
                     </notebook>
                 </sheet>
-                <chatter/>
             </form>
         </field>
     </record>
 
-    <record id="view_ienel_asset_tree" model="ir.ui.view">
-        <field name="name">ienel.asset.tree</field>
-        <field name="model">ienel.asset</field>
-        <field name="arch" type="xml">
-            <list string="Activos Fijos">
-                <field name="name"/>
-                <field name="product_id"/>
-                <field name="brand_name"/>
-                <field name="product_ref"/>
-                <field name="asset_type_id"/>
-                <field name="lot_id"/>
-                <field name="analytic_account_id"/>
-                <field name="employee_id"/>
-                <field name="cost_value" sum="Total Costo"/>
-                <field name="requires_accounting_asset" widget="boolean" optional="show"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'in_use'" decoration-warning="state == 'maintenance'" decoration-danger="state == 'written_off'"/>
-            </list>
-        </field>
-    </record>
-
+    <!-- Vista Kanban -->
     <record id="view_ienel_asset_kanban" model="ir.ui.view">
         <field name="name">ienel.asset.kanban</field>
         <field name="model">ienel.asset</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
+                <field name="id"/>
                 <field name="name"/>
+                <field name="code"/>
                 <field name="product_id"/>
-                <field name="brand_name"/>
                 <field name="employee_id"/>
-                <field name="cost_value"/>
-                <field name="state"/>
+                <field name="image"/>
                 <templates>
                     <t t-name="card">
-                        <div class="d-flex align-items-center mb-2">
-                            <field name="image_1920" widget="image" class="oe_avatar me-2" style="max-width: 50px; max-height: 50px;"/>
-                            <div>
-                                <strong class="o_kanban_record_title"><field name="name"/></strong><br/>
-                                <small class="text-muted"><field name="product_id"/></small>
+                        <div class="d-flex">
+                            <div class="me-2">
+                                <field name="image" widget="image" options="{'zoom': true, 'preview_image': 'image'}" class="o_kanban_image"/>
                             </div>
-                        </div>
-                        <div class="mt-2">
-                            <span><strong>Marca:</strong> <field name="brand_name"/></span><br/>
-                            <span><strong>Responsable:</strong> <field name="employee_id"/></span><br/>
-                            <span><strong>Costo:</strong> <field name="cost_value" widget="monetary"/></span>
-                        </div>
-                        <div class="mt-2 text-end">
-                            <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'in_use'" decoration-warning="state == 'maintenance'" decoration-danger="state == 'written_off'"/>
+                            <div class="flex-grow-1">
+                                <strong class="o_kanban_record_title"><field name="code"/> - <field name="name"/></strong>
+                                <div><span class="text-muted">Producto: </span><field name="product_id"/></div>
+                                <div><span class="text-muted">Responsable: </span><field name="employee_id"/></div>
+                            </div>
                         </div>
                     </t>
                 </templates>
@@ -149,41 +127,18 @@
         </field>
     </record>
 
-    <record id="view_ienel_asset_search" model="ir.ui.view">
-        <field name="name">ienel.asset.search</field>
-        <field name="model">ienel.asset</field>
-        <field name="arch" type="xml">
-            <search string="Buscar Activo Fijo">
-                <field name="name" string="Codigo Unico"/>
-                <field name="product_id"/>
-                <field name="brand_name"/>
-                <field name="lot_id" string="Numero de Serie"/>
-                <field name="employee_id" string="Persona a Cargo"/>
-                <field name="analytic_account_id" string="Centro de Costos"/>
-                <separator/>
-                <filter string="En Uso / Asignado" name="in_use" domain="[('state', '=', 'in_use')]"/>
-                <filter string="Supera Umbral UVT" name="requires_accounting_asset" domain="[('requires_accounting_asset', '=', True)]"/>
-                <group expand="0" string="Agrupar Por">
-                    <filter string="Tipo de Activo / Categoria" name="group_type" context="{'group_by': 'asset_type_id'}"/>
-                    <filter string="Persona a Cargo" name="group_employee" context="{'group_by': 'employee_id'}"/>
-                    <filter string="Centro de Costos" name="group_analytic" context="{'group_by': 'analytic_account_id'}"/>
-                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
+    <!-- Acción de Ventana -->
     <record id="action_ienel_asset" model="ir.actions.act_window">
         <field name="name">Activos Fijos</field>
         <field name="res_model">ienel.asset</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="search_view_id" ref="view_ienel_asset_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Crea tu primer Activo Fijo en IENEL
+                ¡Crea tu primer Activo Fijo!
             </p>
             <p>
-                Gestiona individualmente cada unidad, vincula su numero de serie, asigna el centro de costos y evalua su umbral contable en UVT.
+                Gestiona y realiza el seguimiento de activos fijos, números de serie y centros de costo.
             </p>
         </field>
     </record>
