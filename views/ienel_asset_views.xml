@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista de Búsqueda -->
+    <!-- Vista de Búsqueda (Search View) -->
     <record id="view_ienel_asset_search" model="ir.ui.view">
         <field name="name">ienel.asset.search</field>
         <field name="model">ienel.asset</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Activo / Código" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="name"/>
                 <field name="code"/>
                 <field name="product_id"/>
                 <field name="serial_id"/>
@@ -14,11 +14,9 @@
                 <field name="analytic_account_id"/>
                 <field name="product_category_id"/>
                 <field name="location_id"/>
-                
                 <filter string="Archivados" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
-                
-                <group string="Agrupar por">
+                <group expand="0" string="Agrupar por">
                     <filter string="Categoría de Producto" name="group_category" context="{'group_by': 'product_category_id'}"/>
                     <filter string="Persona a Cargo" name="group_employee" context="{'group_by': 'employee_id'}"/>
                     <filter string="Centro de Costos" name="group_analytic" context="{'group_by': 'analytic_account_id'}"/>
@@ -28,7 +26,7 @@
         </field>
     </record>
 
-    <!-- Vista de Lista -->
+    <!-- Vista de Lista (List View) -->
     <record id="view_ienel_asset_tree" model="ir.ui.view">
         <field name="name">ienel.asset.list</field>
         <field name="model">ienel.asset</field>
@@ -47,7 +45,7 @@
         </field>
     </record>
 
-    <!-- Vista de Formulario -->
+    <!-- Vista de Formulario (Form View) -->
     <record id="view_ienel_asset_form" model="ir.ui.view">
         <field name="name">ienel.asset.form</field>
         <field name="model">ienel.asset</field>
