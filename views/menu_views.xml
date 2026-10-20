@@ -1,57 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Menú Raíz -->
     <menuitem id="menu_ienel_asset_root"
               name="Activos Fijos"
-              sequence="25"/>
+              web_icon="fa fa-cubes,#2E7D32,#FFFFFF"
+              sequence="10"/>
 
+    <!-- Pestaña 1: Tablero -->
     <menuitem id="menu_ienel_asset_dashboard"
               name="Tablero"
               parent="menu_ienel_asset_root"
               action="action_ienel_asset"
               sequence="10"/>
 
+    <!-- Pestaña 2: Activos Fijos -->
     <menuitem id="menu_ienel_asset_main"
               name="Activos Fijos"
               parent="menu_ienel_asset_root"
               sequence="20"/>
 
-    <menuitem id="menu_ienel_asset_list"
+    <menuitem id="menu_ienel_asset_all"
               name="Todos los Activos"
               parent="menu_ienel_asset_main"
               action="action_ienel_asset"
               sequence="10"/>
 
+    <!-- Pestaña 3: Operaciones -->
     <menuitem id="menu_ienel_asset_operations"
               name="Operaciones"
               parent="menu_ienel_asset_root"
               sequence="30"/>
 
-    <menuitem id="menu_ienel_asset_op_list"
-              name="Gestion de Operaciones"
-              parent="menu_ienel_asset_operations"
-              action="action_ienel_asset"
-              sequence="10"/>
-
+    <!-- Pestaña 4: Informes -->
     <menuitem id="menu_ienel_asset_reports"
               name="Informes"
               parent="menu_ienel_asset_root"
               sequence="40"/>
 
-    <menuitem id="menu_ienel_asset_report_summary"
-              name="Analisis de Activos"
-              parent="menu_ienel_asset_reports"
-              action="action_ienel_asset"
-              sequence="10"/>
-
-    <menuitem id="menu_ienel_asset_config"
-              name="Configuracion"
+    <!-- Pestaña 5: Configuración -->
+    <menuitem id="menu_ienel_asset_configuration"
+              name="Configuración"
               parent="menu_ienel_asset_root"
-              sequence="50"
-              groups="group_ienel_asset_manager"/>
+              sequence="50"/>
 
     <menuitem id="menu_ienel_asset_settings"
               name="Ajustes UVT"
-              parent="menu_ienel_asset_config"
+              parent="menu_ienel_asset_configuration"
               action="action_ienel_asset_config_settings"
               sequence="10"/>
 </odoo>

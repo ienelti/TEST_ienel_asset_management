@@ -7,21 +7,20 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app data-string="Activos Fijos IENEL" string="Activos Fijos" name="ienel_asset_management">
-                    <block title="Configuracion de Umbral Contable (UVT)">
-                        <setting id="uvt_settings" title="Parametros UVT" help="Define el valor del UVT en COP y la cantidad limite para exigir la creacion de un activo contable.">
+                <app data-string="Activos Fijos" string="Activos Fijos" name="ienel_asset_management">
+                    <block title="Configuración de Activos Fijos">
+                        <setting string="Umbral de Activos Contables (UVT)" help="Defina el valor en COP de la UVT y la cantidad de UVT a partir de la cual se considera un activo contable.">
                             <div class="content-group">
                                 <div class="row mt16">
-                                    <label for="uvt_value" class="col-lg-4 o_light_label"/>
-                                    <field name="uvt_value" widget="monetary"/>
+                                    <label for="uvt_value" string="Valor UVT (COP)" class="col-lg-4 o_light_label"/>
+                                    <field name="uvt_value"/>
                                 </div>
                                 <div class="row mt8">
-                                    <label for="uvt_threshold_qty" class="col-lg-4 o_light_label"/>
-                                    <field name="uvt_threshold_qty"/>
+                                    <label for="uvt_limit" string="Límite UVT (Cantidad)" class="col-lg-4 o_light_label"/>
+                                    <field name="uvt_limit"/>
                                 </div>
-                                <div class="row mt8">
-                                    <label for="uvt_threshold_amount" class="col-lg-4 o_light_label"/>
-                                    <field name="uvt_threshold_amount" widget="monetary" class="fw-bold text-primary"/>
+                                <div class="text-muted mt8">
+                                    Todo activo con costo mayor o igual a (Valor UVT × Límite UVT) requerirá vinculación contable.
                                 </div>
                             </div>
                         </setting>
@@ -32,7 +31,7 @@
     </record>
 
     <record id="action_ienel_asset_config_settings" model="ir.actions.act_window">
-        <field name="name">Ajustes - Activos Fijos</field>
+        <field name="name">Ajustes Activos Fijos</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista de Búsqueda (Search View) -->
+    <!-- Vista de Búsqueda -->
     <record id="view_ienel_asset_search" model="ir.ui.view">
         <field name="name">ienel.asset.search</field>
         <field name="model">ienel.asset</field>
@@ -25,7 +25,7 @@
         </field>
     </record>
 
-    <!-- Vista de Lista (List View) -->
+    <!-- Vista de Lista -->
     <record id="view_ienel_asset_tree" model="ir.ui.view">
         <field name="name">ienel.asset.list</field>
         <field name="model">ienel.asset</field>
@@ -44,7 +44,7 @@
         </field>
     </record>
 
-    <!-- Vista de Formulario (Form View) -->
+    <!-- Vista de Formulario -->
     <record id="view_ienel_asset_form" model="ir.ui.view">
         <field name="name">ienel.asset.form</field>
         <field name="model">ienel.asset</field>
@@ -130,6 +130,7 @@
         <field name="name">Activos Fijos</field>
         <field name="res_model">ienel.asset</field>
         <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_ienel_asset_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 ¡Crea tu primer Activo Fijo!
