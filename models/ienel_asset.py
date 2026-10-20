@@ -9,11 +9,11 @@ class IenelAsset(models.Model):
     # Identificación
     code = fields.Char(
         string='Código Único',
-        default='AF-00001',
+        required=True,
         tracking=True
     )
     name = fields.Char(
-        string='Nombre / Descripción del Activo',
+        string='Descripción',
         required=True,
         tracking=True
     )
@@ -26,10 +26,6 @@ class IenelAsset(models.Model):
     )
 
     # Información del Producto
-    product_name = fields.Char(
-        string='Producto',
-        tracking=True
-    )
     brand = fields.Char(
         string='Marca',
         tracking=True
@@ -39,11 +35,11 @@ class IenelAsset(models.Model):
         tracking=True
     )
     asset_type = fields.Char(
-        string='Tipo de Activo / Categoría',
+        string='Tipo de Activo',
         tracking=True
     )
     sale_price = fields.Float(
-        string='Precio de Venta (COP)',
+        string='Precio de Venta',
         tracking=True
     )
     serial_number = fields.Char(
@@ -53,24 +49,23 @@ class IenelAsset(models.Model):
 
     # Asignación, Custodia y Centro de Costos
     analytic_account = fields.Char(
-        string='Centro de Costos / Cuenta Analítica',
+        string='Cuenta analítica',
         tracking=True
     )
     analytic_start_date = fields.Date(
-        string='Fecha Inicio Asignación (CC)',
+        string='Fecha Inicio de Cuenta Analítica',
         tracking=True
     )
     company_name = fields.Char(
-        string='Compañía a la que Pertenece',
-        default='IENEL S.A.S.',
-        readonly=True
+        string='Compañía a la que pertenece',
+        default='IENEL S.A.S.'
     )
     person_in_charge = fields.Char(
-        string='Persona a Cargo (Empleado)',
+        string='Persona a cargo',
         tracking=True
     )
     employee_start_date = fields.Date(
-        string='Fecha Inicio Asignación (Persona)',
+        string='Fecha Asignación de Persona',
         tracking=True
     )
     location_name = fields.Char(
@@ -78,9 +73,9 @@ class IenelAsset(models.Model):
         tracking=True
     )
 
-    # Valoración y Leyenda de Umbral Contable
+    # Valoración y Umbral Contable
     purchase_value = fields.Float(
-        string='Costo / Valor (COP)',
+        string='Costo / Valor',
         tracking=True
     )
     requires_accounting_asset = fields.Boolean(
@@ -91,7 +86,7 @@ class IenelAsset(models.Model):
 
     @api.depends('purchase_value')
     def _compute_requires_accounting_asset(self):
-        # Umbral estático de prueba para la alerta visual (ej. 50 UVT ~ 2.489.950 COP)
+        # Umbral estático de prueba para la alerta visual (50 UVT ~ 2.489.950 COP)
         threshold = 2489950.0
         for record in self:
             record.requires_accounting_asset = bool(
