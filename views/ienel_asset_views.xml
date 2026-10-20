@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista de Lista Minimalista -->
+    <!-- Vista de Lista Básica (Temporal) -->
     <record id="view_ienel_asset_tree" model="ir.ui.view">
         <field name="name">ienel.asset.list</field>
         <field name="model">ienel.asset</field>
@@ -8,22 +8,60 @@
             <list string="Activos Fijos">
                 <field name="code"/>
                 <field name="name"/>
+                <field name="product_name"/>
+                <field name="serial_number"/>
+                <field name="person_in_charge"/>
+                <field name="analytic_account"/>
             </list>
         </field>
     </record>
 
-    <!-- Vista de Formulario Minimalista -->
+    <!-- Formulario de Registro Detallado -->
     <record id="view_ienel_asset_form" model="ir.ui.view">
         <field name="name">ienel.asset.form</field>
         <field name="model">ienel.asset</field>
         <field name="arch" type="xml">
             <form string="Activo Fijo">
                 <sheet>
+                    <div class="alert alert-warning text-center" role="alert" invisible="not requires_accounting_asset">
+                        <strong>¡Atención Contable!</strong> El valor de este activo supera el umbral configurado. Se relacionará un activo contable al guardar el registro.
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" placeholder="Código Único (ej. AF-00001)"/>
+                        </h1>
+                        <h2>
+                            <field name="name" placeholder="Nombre / Descripción del Activo Fijo"/>
+                        </h2>
+                    </div>
                     <group>
-                        <field name="code"/>
-                        <field name="name"/>
+                        <group string="Información del Producto">
+                            <field name="product_name" placeholder="ej. DRONE Enterprise v2"/>
+                            <field name="brand" placeholder="ej. DJI"/>
+                            <field name="reference" placeholder="ej. Matrice 300 RTK"/>
+                            <field name="asset_type" placeholder="ej. Equipos Técnicos"/>
+                            <field name="sale_price"/>
+                            <field name="serial_number" placeholder="ej. SN-DRONE-2026-001"/>
+                        </group>
+                        <group string="Asignación y Custodia">
+                            <field name="person_in_charge" placeholder="ej. Juan Pérez"/>
+                            <field name="employee_start_date"/>
+                            <field name="analytic_account" placeholder="ej. CC-1020 Operaciones"/>
+                            <field name="analytic_start_date"/>
+                            <field name="company_name" readonly="1"/>
+                            <field name="location_name" placeholder="ej. Bodega Principal - Estante B"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Valoración y Umbral Contable">
+                        <group>
+                            <field name="purchase_value"/>
+                            <field name="requires_accounting_asset" invisible="1"/>
+                        </group>
                     </group>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
