@@ -1,10 +1,10 @@
 from odoo import models, fields, api, _
 
-
 class IenelAsset(models.Model):
     _name = 'ienel.asset'
     _description = 'Activo Fijo'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'code desc, id desc'
 
     code = fields.Char(
         string='Código Único',
@@ -94,7 +94,7 @@ class IenelAsset(models.Model):
     def _compute_product_fields(self):
         for record in self:
             if record.product_id:
-                record.brand = getattr(record.product_id, 'product_brand', '') or ''
+                record.brand = ''
                 record.reference = record.product_id.default_code or ''
             else:
                 record.brand = ''
