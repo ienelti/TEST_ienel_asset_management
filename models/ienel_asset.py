@@ -28,15 +28,18 @@ class IenelAsset(models.Model):
     # Información del Producto
     brand = fields.Char(
         string='Marca',
+        required=True,
         tracking=True
     )
     reference = fields.Char(
         string='Referencia',
+        required=True,
         tracking=True
     )
     asset_type_id = fields.Many2one(
         'ienel.asset.type',
         string='Tipo de Activo',
+        required=True,
         tracking=True
     )
     sale_price = fields.Float(
@@ -45,12 +48,14 @@ class IenelAsset(models.Model):
     )
     serial_number = fields.Char(
         string='Número de Serial',
+        required=True,
         tracking=True
     )
 
     # Asignación, Custodia y Centro de Costos
     analytic_account = fields.Char(
         string='Cuenta analítica',
+        required=True,
         tracking=True
     )
     analytic_start_date = fields.Date(
@@ -59,7 +64,8 @@ class IenelAsset(models.Model):
     )
     company_name = fields.Char(
         string='Compañía a la que pertenece',
-        default='IENEL S.A.S.'
+        default='IENEL S.A.S.',
+        required=True
     )
     person_in_charge = fields.Char(
         string='Persona a cargo',
@@ -77,6 +83,7 @@ class IenelAsset(models.Model):
     # Valoración y Umbral Contable
     purchase_value = fields.Float(
         string='Costo / Valor',
+        required=True,
         tracking=True
     )
     requires_accounting_asset = fields.Boolean(
