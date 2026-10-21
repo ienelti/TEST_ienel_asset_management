@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de Lista de Tipos de Activos -->
+    <record id="view_ienel_asset_type_tree" model="ir.ui.view">
+        <field name="name">ienel.asset.type.list</field>
+        <field name="model">ienel.asset.type</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Activos" editable="bottom">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de Formulario de Tipos de Activos -->
+    <record id="view_ienel_asset_type_form" model="ir.ui.view">
+        <field name="name">ienel.asset.type.form</field>
+        <field name="model">ienel.asset.type</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de Activo">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="ej. Equipos Técnicos, Vehículos, Muebles..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana -->
+    <record id="action_ienel_asset_type" model="ir.actions.act_window">
+        <field name="name">Tipos de activos</field>
+        <field name="res_model">ienel.asset.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -34,7 +34,8 @@ class IenelAsset(models.Model):
         string='Referencia',
         tracking=True
     )
-    asset_type = fields.Char(
+    asset_type_id = fields.Many2one(
+        'ienel.asset.type',
         string='Tipo de Activo',
         tracking=True
     )

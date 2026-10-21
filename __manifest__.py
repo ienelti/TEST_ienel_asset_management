@@ -8,6 +8,7 @@
     'depends': ['base', 'mail'],
     'data': [
         'security/ir.model.access.csv',
+        'views/ienel_asset_type_views.xml',
         'views/ienel_asset_views.xml',
         'views/menu_views.xml',
         ],
