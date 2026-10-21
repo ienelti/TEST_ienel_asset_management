@@ -12,7 +12,7 @@
                 <field name="reference"/>
                 <field name="asset_type_id"/>
                 <field name="analytic_account"/>
-                <field name="person_in_charge"/>
+                <field name="person_in_charge_id"/>
             </list>
         </field>
     </record>
@@ -25,15 +25,15 @@
             <kanban class="o_kanban_mobile">
                 <templates>
                     <t t-name="card">
-                        <div class="d-flex">
-                            <div class="me-2">
-                                <field name="image" widget="image" class="o_kanban_image"/>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3 flex-shrink-0" style="width: 80px; height: 80px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                <field name="image" widget="image" class="w-100 h-100 object-fit-cover rounded"/>
                             </div>
                             <div class="flex-grow-1">
                                 <strong class="o_kanban_record_title"><field name="code"/> - <field name="name"/></strong>
                                 <div><span class="text-muted">Marca / Ref: </span><field name="brand"/> <field name="reference"/></div>
                                 <div><span class="text-muted">Tipo de Activo: </span><field name="asset_type_id"/></div>
-                                <div><span class="text-muted">Persona a cargo: </span><field name="person_in_charge"/></div>
+                                <div><span class="text-muted">Persona a cargo: </span><field name="person_in_charge_id"/></div>
                                 <div><span class="text-muted">Cuenta analítica: </span><field name="analytic_account"/></div>
                             </div>
                         </div>
@@ -71,11 +71,11 @@
                             <field name="serial_number"/>
                         </group>
                         <group string="Asignación y Custodia">
-                            <field name="person_in_charge"/>
+                            <field name="person_in_charge_id"/>
                             <field name="employee_start_date"/>
                             <field name="analytic_account"/>
                             <field name="analytic_start_date"/>
-                            <field name="company_name"/>
+                            <field name="company_id"/>
                             <field name="location_name"/>
                             <field name="active" invisible="1"/>
                         </group>

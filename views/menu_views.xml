@@ -3,9 +3,8 @@
     <!-- Menú Raíz -->
     <menuitem id="menu_ienel_asset_root" name="Activos Fijos" sequence="10"/>
 
-    <!-- Pestaña Principal: Activos Fijos -->
-    <menuitem id="menu_ienel_asset_main" name="Activos Fijos" parent="menu_ienel_asset_root" sequence="10"/>
-    <menuitem id="menu_ienel_asset_all" name="Todos los Activos" parent="menu_ienel_asset_main" action="action_ienel_asset" sequence="10"/>
+    <!-- Pestaña Principal: Clic directo a la Acción de Activos Fijos -->
+    <menuitem id="menu_ienel_asset_main" name="Activos Fijos" parent="menu_ienel_asset_root" action="action_ienel_asset" sequence="10"/>
 
     <!-- Pestaña: Configuración -->
     <menuitem id="menu_ienel_asset_config" name="Configuración" parent="menu_ienel_asset_root" sequence="100"/>

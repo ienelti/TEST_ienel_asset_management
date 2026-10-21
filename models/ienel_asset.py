@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 
 class IenelAsset(models.Model):
     _name = 'ienel.asset'
@@ -62,12 +62,15 @@ class IenelAsset(models.Model):
         string='Fecha Inicio de Cuenta Analítica',
         tracking=True
     )
-    company_name = fields.Char(
+    company_id = fields.Many2one(
+        'res.company',
         string='Compañía a la que pertenece',
-        default='IENEL S.A.S.',
-        required=True
+        default=lambda self: self.env.company,
+        required=True,
+        tracking=True
     )
-    person_in_charge = fields.Char(
+    person_in_charge_id = fields.Many2one(
+        'res.partner',
         string='Persona a cargo',
         tracking=True
     )
