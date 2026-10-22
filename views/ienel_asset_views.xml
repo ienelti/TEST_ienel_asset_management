@@ -5,7 +5,7 @@
         <field name="name">ienel.asset.search</field>
         <field name="model">ienel.asset</field>
         <field name="arch" type="xml">
-            <search string="Activos Fijos">
+            <search>
                 <field name="name"/>
                 <field name="code"/>
                 <field name="brand"/>
@@ -16,7 +16,7 @@
                 <separator/>
                 <filter string="Archivados" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Agrupar por">
-                    <filter string="Tipo de Activo" name="group_asset_type" domain="[]" context="{'group_by': 'asset_type_id'}"/>
+                    <filter string="Tipo de Activo" name="group_asset_type" context="{'group_by': 'asset_type_id'}"/>
                 </group>
             </search>
         </field>
