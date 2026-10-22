@@ -15,7 +15,7 @@
                 <field name="analytic_account"/>
                 <separator/>
                 <filter string="Archivados" name="inactive" domain="[('active', '=', False)]"/>
-                <group expand="0" string="Agrupar por">
+                <group string="Agrupar por">
                     <filter string="Tipo de Activo" name="group_asset_type" context="{'group_by': 'asset_type_id'}"/>
                 </group>
             </search>
@@ -119,6 +119,5 @@
         <field name="name">Activos Fijos</field>
         <field name="res_model">ienel.asset</field>
         <field name="view_mode">list,kanban,form</field>
-        <field name="search_view_id" ref="view_ienel_asset_search"/>
     </record>
 </odoo>
