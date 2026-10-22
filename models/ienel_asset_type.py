@@ -27,11 +27,11 @@ class IenelAssetType(models.Model):
     
     def action_open_assets(self):
         self.ensure_one()
-        return {
-            'name': f'Activos Fijos: {self.name}',
-            'type': 'ir.actions.act_window',
-            'res_model': 'ienel.asset',
-            'view_mode': 'list,kanban,form',
-            'domain': [('asset_type_id', '=', self.id)],
-            'context': {'default_asset_type_id': self.id},
-        }
+        action = self.env['ir.actions.act_window'].search([('res_model', '=', 'ienel.asset')], limit=1).read()[0]
+        context = dict(self.env.context or {})
+        context.update({
+            'default_asset_type_id': self.id,
+            'search_default_asset_type_id': self.id
+        })
+        action['context'] = context
+        return action
