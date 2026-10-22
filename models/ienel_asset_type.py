@@ -27,11 +27,14 @@ class IenelAssetType(models.Model):
     
     def action_open_assets(self):
         self.ensure_one()
-        action = self.env['ir.actions.act_window'].search([('res_model', '=', 'ienel.asset')], limit=1).read()[0]
+        action_records = self.env['ir.actions.act_window'].search([('res_model', '=', 'ienel.asset')], limit=1).read()
+        if not action_records: 
+            return False
+        action = action_records[0]
         context = dict(self.env.context or {})
         context.update({
             'default_asset_type_id': self.id,
-            'search_default_asset_type_id': self.id
+            'search_default_asset_type_id': self.id,
         })
         action['context'] = context
         return action
