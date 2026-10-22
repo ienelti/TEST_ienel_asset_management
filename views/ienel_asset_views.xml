@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista de Búsqueda -->
+    <!-- Vista de Búsqueda Minimalista de Prueba -->
     <record id="view_ienel_asset_search" model="ir.ui.view">
         <field name="name">ienel.asset.search</field>
         <field name="model">ienel.asset</field>
@@ -10,14 +10,6 @@
                 <field name="code"/>
                 <field name="brand"/>
                 <field name="reference"/>
-                <field name="asset_type_id"/>
-                <field name="person_in_charge_id"/>
-                <field name="analytic_account"/>
-                <separator/>
-                <filter string="Archivados" name="inactive" domain="[('active', '=', False)]"/>
-                <group string="Agrupar por">
-                    <filter string="Tipo de Activo" name="group_asset_type" context="{'group_by': 'asset_type_id'}"/>
-                </group>
             </search>
         </field>
     </record>
