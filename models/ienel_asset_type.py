@@ -16,7 +16,8 @@ class IenelAssetType(models.Model):
     )
     asset_count = fields.Integer(
         string='Cantidad de Activos',
-        compute='_compute_asset_count'
+        compute='_compute_asset_count',
+        store=True
     )
     
     @api.depends('asset_ids')
