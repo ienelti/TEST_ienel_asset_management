@@ -68,4 +68,13 @@
             </kanban>
         </field>
     </record>
+
+    <!-- Acción de Ventana para el Tablero Principal -->
+    <record id="action_ienel_asset_dashboard" model="ir.actions.act_window">
+        <field name="name">Tablero de Activos Fijos</field>
+        <field name="res_model">ienel.asset.type</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain">[('asset_count', '>', 0)]</field>
+        <field name="view_id" ref="view_ienel_asset_type_kanban"/>
+    </record>
 </odoo>
