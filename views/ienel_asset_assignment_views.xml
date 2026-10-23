@@ -48,4 +48,33 @@
             </form>
         </field>
     </record>
+
+    <!-- Vista de Búsqueda Global de Pertenencias -->
+    <record id="view_ienel_asset_assignment_search" model="ir.ui.view">
+        <field name="name">ienel.asset.assignment.search</field>
+        <field name="model">ienel.asset.assignment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="asset_id"/>
+                <field name="partner_id"/>
+                <field name="state"/>
+                <separator/>
+                <filter string="En Custodia / Activos" name="active_custody" domain="[('state', '=', 'active')]"/>
+                <separator string="Agrupar por"/>
+                <group>
+                    <filter string="Activo Fijo" name="group_asset" context="{'group_by': 'asset_id'}"/>
+                    <filter string="Persona a cargo" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana Global para Pertenencias -->
+    <record id="action_ienel_asset_assignment" model="ir.actions.act_window">
+        <field name="name">Pertenencias</field>
+        <field name="res_model">ienel.asset.assignment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ienel_asset_assignment_search"/>
+    </record>
 </odoo>
