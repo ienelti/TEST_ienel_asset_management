@@ -73,6 +73,11 @@
         <field name="arch" type="xml">
             <form string="Activo Fijo">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_assignments" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="assignment_count" widget="statinfo" string="Pertenencias"/>
+                        </button>
+                    </div>
                     <div class="alert alert-warning text-center" role="alert" invisible="not requires_accounting_asset">
                         <strong>¡Atención!</strong> El valor de este activo supera el umbral configurado. Deberá relacionar un activo contable al guardar el registro.
                     </div>
@@ -93,9 +98,8 @@
                             <field name="sale_price"/>
                             <field name="serial_number"/>
                         </group>
-                        <group string="Asignación y Custodia">
-                            <field name="person_in_charge_id"/>
-                            <field name="employee_start_date"/>
+                        <group string="Asignación y Pertenencia">
+                            <field name="person_in_charge_id" readonly="1"/>
                             <field name="analytic_account"/>
                             <field name="analytic_start_date"/>
                             <field name="company_id"/>

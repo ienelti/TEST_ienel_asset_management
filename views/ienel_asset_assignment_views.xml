@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de Lista de Asignaciones -->
+    <record id="view_ienel_asset_assignment_tree" model="ir.ui.view">
+        <field name="name">ienel.asset.assignment.list</field>
+        <field name="model">ienel.asset.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Historial de Pertenencias">
+                <field name="asset_id"/>
+                <field name="partner_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state" widget="badge" decoration-warning="state == 'draft'" decoration-success="state == 'active'" decoration-info="state == 'pending_clearance'" decoration-muted="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Formulario de Asignación con Barra de Estados -->
+    <record id="view_ienel_asset_assignment_form" model="ir.ui.view">
+        <field name="name">ienel.asset.assignment.form</field>
+        <field name="model">ienel.asset.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Asignación de Activo">
+                <header>
+                    <button name="action_activate" string="Activar Pertenencia (Comodato Firmado)" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_request_clearance" string="Solicitar Devolución / Paz y Salvo" type="object" class="btn-warning" invisible="state != 'active'"/>
+                    <button name="action_close" string="Finalizar (Paz y Salvo Firmado)" type="object" class="oe_highlight" invisible="state != 'pending_clearance'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,pending_clearance,closed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Datos de la Pertenencia">
+                            <field name="asset_id" readonly="state != 'draft'"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Fechas de Control">
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state == 'closed'"/>
+                        </group>
+                    </group>
+                    <group string="Observaciones">
+                        <field name="notes" placeholder="Escribe notas sobre el estado de entrega o recepción del activo..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>

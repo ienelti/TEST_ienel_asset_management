@@ -52,7 +52,7 @@ class IenelAsset(models.Model):
         tracking=True
     )
 
-    # Asignación, Custodia y Centro de Costos
+    # Asignación, Pertenencia y Centro de Costos
     analytic_account = fields.Char(
         string='Cuenta analítica',
         required=True,
@@ -69,13 +69,20 @@ class IenelAsset(models.Model):
         required=True,
         tracking=True
     )
+    assignment_ids = fields.One2many(
+        'ienel.asset.assignment',
+        'asset_id',
+        string='Historial de Pertenencias' 
+    ) 
+    assignment_count = fields.Integer(
+        string='Cantidad de Pertenencias',
+        compute='_compute_assignment_count'
+    )
     person_in_charge_id = fields.Many2one(
         'res.partner',
         string='Persona a cargo',
-        tracking=True
-    )
-    employee_start_date = fields.Date(
-        string='Fecha Asignación de Persona',
+        compute='_compute_person_in_charge',
+        store=True,
         tracking=True
     )
     location_name = fields.Char(
@@ -103,3 +110,27 @@ class IenelAsset(models.Model):
             record.requires_accounting_asset = bool(
                 record.purchase_value and record.purchase_value >= threshold
             )
+    
+    @api.depends('assignment_ids', 'assignment_ids.state', 'assignment_ids.partner_id')
+    def _compute_person_in_charge(self):
+        for record in self:
+            active_assignment = record.assignment_ids.filtered(lambda a: a.state in ('draft', 'active', 'pending_clearance'))
+            record.person_in_charge_id = active_assignment[0].partner_id if active_assignment else False
+    
+    @api.depends('assignment_ids')
+    def _compute_assignment_count(self):
+        for record in self:
+            record.assignment_count = len(record.assignment_ids)
+    
+    def action_open_assignments(self):
+        self.ensure_one()
+        return {
+            'name': f'Historial de Pertenencias: {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'ienel.asset.assignment',
+            'view_mode': 'list,form',
+            'domain': [('asset_id', '=', self.id)],
+            'context': {
+                'default_asset_id': self.id,
+            },
+        }
