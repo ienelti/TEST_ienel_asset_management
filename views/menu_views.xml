@@ -3,13 +3,15 @@
     <!-- Menú Raíz -->
     <menuitem id="menu_ienel_asset_root" name="Activos Fijos" sequence="10"/>
 
-    <!-- Pestaña Principal: Tableros -->
+    <!-- Pestaña Principal: Tablero -->
     <menuitem id="menu_ienel_asset_dashboard" name="Tablero" parent="menu_ienel_asset_root" action="action_ienel_asset_dashboard" sequence="5"/>
 
-    <!-- Pestaña: Activos Fijos -->
-    <menuitem id="menu_ienel_asset_main" name="Activos" parent="menu_ienel_asset_root" action="action_ienel_asset" sequence="10"/>
+    <!-- Pestaña Principal: Activos -->
+    <menuitem id="menu_ienel_asset_main" name="Activos" parent="menu_ienel_asset_root" sequence="10"/>
+    <menuitem id="menu_ienel_asset_all" name="Todos los activos" parent="menu_ienel_asset_main" action="action_ienel_asset" sequence="10"/>
+    <menuitem id="menu_ienel_asset_assignment_menu" name="Pertenencias" parent="menu_ienel_asset_main" action="action_ienel_asset_assignment" sequence="20"/>
 
-    <!-- Pestaña: Configuración -->
+    <!-- Pestaña Principal: Configuración -->
     <menuitem id="menu_ienel_asset_config" name="Configuración" parent="menu_ienel_asset_root" sequence="100"/>
     <menuitem id="menu_ienel_asset_type" name="Tipos de activos" parent="menu_ienel_asset_config" action="action_ienel_asset_type" sequence="10"/>
 </odoo>

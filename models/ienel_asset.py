@@ -125,13 +125,14 @@ class IenelAsset(models.Model):
     def action_open_assignments(self):
         self.ensure_one()
         return {
-            'name': f'Historial de Pertenencias: {self.name}',
+            'name': f'Pertenencias: {self.name}',
             'type': 'ir.actions.act_window',
             'res_model': 'ienel.asset.assignment',
             'view_mode': 'list,form',
             'domain': [('asset_id', '=', self.id)],
             'context': {
                 'default_asset_id': self.id,
+                'search_default_asset_id': self.id,
             },
         }
         
