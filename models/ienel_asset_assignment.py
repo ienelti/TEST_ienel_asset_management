@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 class IenelAssetAssignment(models.Model):
     _name = 'ienel.asset.assignment'
-    _description = 'Historial de Pertenencia / Asignación de Activo'
+    _description = 'Historial de Pertenencias'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'start_date desc, id desc'
 
@@ -21,52 +21,55 @@ class IenelAssetAssignment(models.Model):
         tracking=True
     )
     start_date = fields.Date(
-        string='Fecha Inicio Asignación',
-        default=fields.Date.context_today,
+        string='Fecha de inicio',
         required=True,
+        default=False,
         tracking=True
     )
     end_date = fields.Date(
-        string='Fecha Fin / Devolución',
+        string='Fecha fin',
+        tracking=True
+    )
+    comodato_signed = fields.Boolean(
+        string='Contrato de Comodato',
+        default=False,
+        tracking=True
+    )
+    paz_y_salvo_signed = fields.Boolean(
+        string='Paz y Salvo',
+        default=False,
+        tracking=True
+    )
+    notes = fields.Text(
+        string='Observaciones',
         tracking=True
     )
     state = fields.Selection([
-        ('draft', 'Pendiente Comodato'),
+        ('draft', 'Borrador'),
         ('active', 'Activo'),
         ('pending_clearance', 'Pendiente Paz y Salvo'),
         ('closed', 'Terminado'),
     ], string='Estado', default='draft', required=True, tracking=True)
-    notes = fields.Text(
-        string='Observaciones Devolución'
-    )
 
     @api.constrains('asset_id', 'state')
     def _check_single_active_assignment(self):
         for rec in self:
             if rec.state != 'closed':
-                open_assignments = self.search([
+                other_open = self.search([
                     ('asset_id', '=', rec.asset_id.id),
                     ('id', '!=', rec.id),
                     ('state', '!=', 'closed')
                 ])
-                if open_assignments:
+                if other_open:
                     raise UserError(_(
                         "No se puede registrar una nueva pertenencia para el activo '%s'. "
-                        "Existe una asignación en proceso con '%s' que debe estar en estado 'Concluido'."
-                    ) % (rec.asset_id.display_name, open_assignments[0].partner_id.name))
+                        "Existe una pertenencia en proceso con '%s' que debe estar en estado 'Terminado'."
+                    ) % (rec.asset_id.display_name, other_open[0].partner_id.name))
 
     def action_activate(self):
         for rec in self:
+            if not rec.start_date:
+                raise UserError(_("Debe ingresar la 'Fecha de inicio' para poder asignar la pertenencia."))
+            if not rec.comodato_signed:
+                raise UserError(_("Debe marcar la casilla 'Contrato de Comodato' como firmado para poder asignar la pertenencia."))
             rec.state = 'active'
-
-    def action_request_clearance(self):
-        for rec in self:
-            if not rec.end_date:
-                rec.end_date = fields.Date.context_today(self)
-            rec.state = 'pending_clearance'
-
-    def action_close(self):
-        for rec in self:
-            if not rec.end_date:
-                rec.end_date = fields.Date.context_today(self)
-            rec.state = 'closed'

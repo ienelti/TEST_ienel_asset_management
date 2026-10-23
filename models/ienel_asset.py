@@ -114,7 +114,7 @@ class IenelAsset(models.Model):
     @api.depends('assignment_ids', 'assignment_ids.state', 'assignment_ids.partner_id')
     def _compute_person_in_charge(self):
         for record in self:
-            active_assignment = record.assignment_ids.filtered(lambda a: a.state in ('draft', 'active', 'pending_clearance'))
+            active_assignment = record.assignment_ids.filtered(lambda a: a.state in ('active', 'pending_clearance'))
             record.person_in_charge_id = active_assignment[0].partner_id if active_assignment else False
     
     @api.depends('assignment_ids')

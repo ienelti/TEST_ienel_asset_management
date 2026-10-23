@@ -10,21 +10,19 @@
                 <field name="partner_id"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
-                <field name="state" widget="badge" decoration-warning="state == 'draft'" decoration-success="state == 'active'" decoration-info="state == 'pending_clearance'" decoration-muted="state == 'closed'"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'active'" decoration-warning="state == 'pending_clearance'" decoration-muted="state == 'closed'"/>
             </list>
         </field>
     </record>
 
-    <!-- Vista Formulario de Asignación con Barra de Estados -->
+    <!-- Vista Formulario de Pertenencia -->
     <record id="view_ienel_asset_assignment_form" model="ir.ui.view">
         <field name="name">ienel.asset.assignment.form</field>
         <field name="model">ienel.asset.assignment</field>
         <field name="arch" type="xml">
-            <form string="Asignación de Activo">
+            <form string="Pertenencia de Activo">
                 <header>
-                    <button name="action_activate" string="Activar Pertenencia (Comodato Firmado)" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <button name="action_request_clearance" string="Solicitar Devolución / Paz y Salvo" type="object" class="btn-warning" invisible="state != 'active'"/>
-                    <button name="action_close" string="Finalizar (Paz y Salvo Firmado)" type="object" class="oe_highlight" invisible="state != 'pending_clearance'"/>
+                    <button name="action_activate" string="Asignar" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,active,pending_clearance,closed"/>
                 </header>
                 <sheet>
@@ -38,41 +36,16 @@
                             <field name="end_date" readonly="state == 'closed'"/>
                         </group>
                     </group>
-                    <group string="Observaciones">
-                        <field name="notes" placeholder="Escribe notas sobre el estado de entrega o recepción del activo..."/>
+                    <group string="Contratos y Documentos">
+                        <field name="comodato_signed" readonly="state != 'draft'"/>
+                        <field name="paz_y_salvo_signed" invisible="state in ('draft', 'active')" readonly="state == 'closed'"/>
+                    </group>
+                    <group string="Observaciones" invisible="state in ('draft', 'active')">
+                        <field name="notes" placeholder="Escribe observaciones sobre la devolución del activo..." readonly="state == 'closed'"/>
                     </group>
                 </sheet>
                 <chatter/>
             </form>
         </field>
-    </record>
-
-    <!-- Vista de Búsqueda de Pertenencias -->
-    <record id="view_ienel_asset_assignment_search" model="ir.ui.view">
-        <field name="name">ienel.asset.assignment.search</field>
-        <field name="model">ienel.asset.assignment</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="asset_id"/>
-                <field name="partner_id"/>
-                <field name="state"/>
-                <separator/>
-                <filter string="Asignados / Activos" name="active_custody" domain="[('state', '=', 'active')]"/>
-                <separator string="Agrupar por"/>
-                <group>
-                    <filter string="Activo Fijo" name="group_asset" context="{'group_by': 'asset_id'}"/>
-                    <filter string="Persona a cargo" name="group_partner" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- Acción de Ventana Global para Pertenencias -->
-    <record id="action_ienel_asset_assignment" model="ir.actions.act_window">
-        <field name="name">Pertenencias</field>
-        <field name="res_model">ienel.asset.assignment</field>
-        <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_ienel_asset_assignment_search"/>
     </record>
 </odoo>
