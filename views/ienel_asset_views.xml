@@ -84,7 +84,7 @@
                     <field name="image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="code" placeholder="Código Único (ej. AF-00001)"/>
+                            <field name="code" placeholder="Código Único (ej. AF-00001)" class="text-uppercase"/>
                         </h1>
                         <h2>
                             <field name="name" placeholder="Descripción del Activo Fijo"/>
@@ -96,7 +96,7 @@
                             <field name="reference"/>
                             <field name="asset_type_id"/>
                             <field name="sale_price"/>
-                            <field name="serial_number"/>
+                            <field name="serial_number" class="text-uppercase"/>
                         </group>
                         <group string="Asignación y Pertenencia">
                             <field name="person_in_charge_id" readonly="1"/>

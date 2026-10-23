@@ -134,3 +134,27 @@ class IenelAsset(models.Model):
                 'default_asset_id': self.id,
             },
         }
+        
+    @api.onchange('code', 'serial_number')
+    def _onchange_uppercase_fields(self):
+        if self.code:
+            self.code = self.code.upper()
+        if self.serial_number:
+            self.serial_number = self.serial_number.upper()
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('code'):
+                vals['code'] = vals['code'].upper()
+            if vals.get('serial_number'):
+                vals['serial_number'] = vals['serial_number'].upper()
+        return super().create(vals_list)
+    
+    def write(self, vals):
+        if vals.get('code'):
+            vals['code'] = vals['code'].upper()
+        if vals.get('serial_number'):
+            vals['serial_number'] = vals['serial_number'].upper()
+        return super().write(vals)
+    
