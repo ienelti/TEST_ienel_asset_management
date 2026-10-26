@@ -73,3 +73,11 @@ class IenelAssetAssignment(models.Model):
             if not rec.comodato_signed:
                 raise UserError(_("Debe marcar la casilla 'Contrato de Comodato' como firmado para poder asignar la pertenencia."))
             rec.state = 'active'
+            
+    def action_request_clearance(self):
+        for rec in self:
+            rec.state = 'pending_clearance'
+    
+    def action_reset_draft(self):
+        for rec in self:
+            rec.state = 'draft'
