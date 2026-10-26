@@ -81,35 +81,37 @@
                     <div class="alert alert-warning text-center" role="alert" invisible="not requires_accounting_asset">
                         <strong>¡Atención!</strong> El valor de este activo supera el umbral configurado. Deberá relacionar un activo contable al guardar el registro.
                     </div>
-                    <field name="image" widget="image" class="oe_avatar"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'prevent_copy': True}"/>
+                    
+                    <!-- Encabezado: Código Único y Selector de Número de Serie -->
                     <div class="oe_title">
+                        <label for="code"/>
                         <h1>
                             <field name="code" placeholder="Código Único (ej. AF-00001)" class="text-uppercase"/>
                         </h1>
+                        <label for="lot_id" string="Número de serie"/>
                         <h2>
-                            <field name="name" placeholder="Descripción del Activo Fijo"/>
+                            <field name="lot_id" placeholder="Seleccionar Número de Serie..."/>
                         </h2>
                     </div>
+
+                    <!-- Grupos reorganizados según el flujo de inventario -->
                     <group>
                         <group string="Información del Activo">
-                            <field name="brand"/>
-                            <field name="reference"/>
+                            <field name="name" string="Nombre"/>
+                            <field name="brand" string="Marca"/>
+                            <field name="reference" string="Modelo / Referencia"/>
                             <field name="asset_type_id"/>
-                            <field name="sale_price"/>
-                            <field name="serial_number" class="text-uppercase"/>
+                            <field name="purchase_value" string="Valor"/>
+                            <field name="sale_price" string="Precio de venta"/>
                         </group>
-                        <group string="Asignación y Pertenencia">
+                        <group string="Ubicación y asignaciones">
                             <field name="person_in_charge_id" readonly="1"/>
-                            <field name="analytic_account"/>
-                            <field name="analytic_start_date"/>
                             <field name="company_id"/>
-                            <field name="location_name"/>
+                            <field name="location_name" placeholder="ej. Bodega Principal - Estante B"/>
+                            <field name="analytic_account" placeholder="ej. CC-1020 Operaciones"/>
+                            <field name="analytic_start_date"/>
                             <field name="active" invisible="1"/>
-                        </group>
-                    </group>
-                    <group string="Valoración y Umbral Contable">
-                        <group>
-                            <field name="purchase_value"/>
                             <field name="requires_accounting_asset" invisible="1"/>
                         </group>
                     </group>

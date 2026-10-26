@@ -6,35 +6,56 @@ class IenelAsset(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'code desc, id desc'
 
-    # Identificación
+    # Identificación y Relación con Inventario
     code = fields.Char(
         string='Código Único',
         required=True,
         tracking=True
     )
-    name = fields.Char(
-        string='Descripción',
+    lot_id = fields.Many2one(
+        'stock.lot',
+        string='Número de serie',
         required=True,
         tracking=True
     )
-    image = fields.Image(
-        string='Imagen'
-    )
-    active = fields.Boolean(
-        string='Activo',
-        default=True
+    product_id = fields.Many2one(
+        'product.product',
+        related='lot_id.product_id',
+        string='Producto',
+        store=True,
+        readonly=True
     )
 
-    # Información del Producto
+    # Información del Producto (Relacionados dinámicamente desde el producto y lote)
+    name = fields.Char(
+        related='lot_id.product_id.name',
+        string='Descripción',
+        store=True,
+        readonly=True
+    )
+    image = fields.Image(
+        related='lot_id.product_id.image_1920',
+        string='Imagen',
+        tracking=True,
+        readonly=True
+    )
     brand = fields.Char(
+        related='lot_id.product_id.l10n_co_edi_brand',
         string='Marca',
-        required=True,
-        tracking=True
+        store=True,
+        readonly=True
     )
     reference = fields.Char(
+        related='lot_id.product_id.l10n_co_edi_reference',
         string='Referencia',
-        required=True,
-        tracking=True
+        store=True,
+        readonly=True
+    )
+    serial_number = fields.Char(
+        related='lot_id.name',
+        string='Número de Serial',
+        store=True,
+        readonly=True
     )
     asset_type_id = fields.Many2one(
         'ienel.asset.type',
@@ -42,14 +63,23 @@ class IenelAsset(models.Model):
         required=True,
         tracking=True
     )
-    sale_price = fields.Float(
-        string='Precio de Venta',
-        tracking=True
+    active = fields.Boolean(
+        string='Activo',
+        default=True
     )
-    serial_number = fields.Char(
-        string='Número de Serial',
-        required=True,
-        tracking=True
+
+    # Valores Financieros (Heredados del Producto)
+    purchase_value = fields.Float(
+        related='lot_id.product_id.standard_price',
+        string='Valor',
+        store=True,
+        readonly=True
+    )
+    sale_price = fields.Float(
+        related='lot_id.product_id.list_price',
+        string='Precio de Venta',
+        store=True,
+        readonly=True
     )
 
     # Asignación, Pertenencia y Centro de Costos
@@ -64,16 +94,16 @@ class IenelAsset(models.Model):
     )
     company_id = fields.Many2one(
         'res.company',
+        related='lot_id.company_id',
         string='Compañía a la que pertenece',
-        default=lambda self: self.env.company,
-        required=True,
-        tracking=True
+        store=True,
+        readonly=True
     )
     assignment_ids = fields.One2many(
         'ienel.asset.assignment',
         'asset_id',
-        string='Historial de Pertenencias' 
-    ) 
+        string='Historial de Pertenencias'
+    )
     assignment_count = fields.Integer(
         string='Cantidad de Pertenencias',
         compute='_compute_assignment_count'
@@ -90,12 +120,7 @@ class IenelAsset(models.Model):
         tracking=True
     )
 
-    # Valoración y Umbral Contable
-    purchase_value = fields.Float(
-        string='Costo / Valor',
-        required=True,
-        tracking=True
-    )
+    # Umbral Contable
     requires_accounting_asset = fields.Boolean(
         string='Requiere Activo Contable',
         compute='_compute_requires_accounting_asset',
@@ -104,24 +129,25 @@ class IenelAsset(models.Model):
 
     @api.depends('purchase_value')
     def _compute_requires_accounting_asset(self):
-        # Umbral estático de prueba para la alerta visual (50 UVT ~ 2.489.950 COP)
         threshold = 2489950.0
         for record in self:
             record.requires_accounting_asset = bool(
                 record.purchase_value and record.purchase_value >= threshold
             )
-    
+
     @api.depends('assignment_ids', 'assignment_ids.state', 'assignment_ids.partner_id')
     def _compute_person_in_charge(self):
         for record in self:
-            active_assignment = record.assignment_ids.filtered(lambda a: a.state in ('active', 'pending_clearance'))
-            record.person_in_charge_id = active_assignment[0].partner_id if active_assignment else False
-    
+            active_assignment = record.assignment_ids.filtered(
+                lambda a: a.state in ('active', 'pending_clearance')
+            )
+            record.person_in_charge_id = active_assignment.partner_id if active_assignment else False
+
     @api.depends('assignment_ids')
     def _compute_assignment_count(self):
         for record in self:
             record.assignment_count = len(record.assignment_ids)
-    
+
     def action_open_assignments(self):
         self.ensure_one()
         return {
@@ -135,36 +161,30 @@ class IenelAsset(models.Model):
                 'search_default_asset_id': self.id,
             },
         }
-        
-    @api.onchange('code', 'serial_number')
+
+    @api.onchange('code')
     def _onchange_uppercase_fields(self):
         if self.code:
             self.code = self.code.upper()
-        if self.serial_number:
-            self.serial_number = self.serial_number.upper()
-    
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('code'):
                 vals['code'] = vals['code'].upper()
-            if vals.get('serial_number'):
-                vals['serial_number'] = vals['serial_number'].upper()
         return super().create(vals_list)
-    
+
     def write(self, vals):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
-        if vals.get('serial_number'):
-            vals['serial_number'] = vals['serial_number'].upper()
         return super().write(vals)
-    
-    @api.depends('name', 'serial_number')
+
+    @api.depends('name', 'lot_id', 'lot_id.name')
     def _compute_display_name(self):
         for record in self:
             asset_name = record.name or ''
-            if record.serial_number:
-                record.display_name = f"{asset_name} [{record.serial_number}]"
+            serial = record.lot_id.name if record.lot_id else ''
+            if serial:
+                record.display_name = f"{asset_name} [{serial}]"
             else:
                 record.display_name = asset_name
-    

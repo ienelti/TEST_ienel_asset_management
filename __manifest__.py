@@ -5,7 +5,11 @@
     'summary': 'Módulo base minimalista para Activos Fijos.',
     'author': 'IENEL',
     'license': 'LGPL-3',
-    'depends': ['base', 'mail'],
+    'depends': [
+        'base',
+        'mail',
+        'stock',
+    ],
     'data': [
         'security/ir.model.access.csv',
         'views/ienel_asset_views.xml',
