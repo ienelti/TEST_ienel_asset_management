@@ -93,7 +93,11 @@ class IenelAssetAssignment(models.Model):
             if not rec.paz_y_salvo_signed:
                 raise UserError(_("Debe marcar la casilla 'Paz y Salvo' como firmado para poder terminar la pertenencia."))
             rec.state = 'closed'
-            
+
+    def action_revert_clearance(self):
+        for rec in self:
+            rec.state = 'pending_clearance'
+        
     @api.depends('asset_id', 'asset_id.name', 'asset_id.serial_number')
     def _compute_display_name(self):
         for record in self:

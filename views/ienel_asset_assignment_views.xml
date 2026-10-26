@@ -27,6 +27,7 @@
                     <button name="action_reset_draft" string="Restablecer borrador" type="object" class="btn-secondary" invisible="state != 'active'"/>
                     <button name="action_close" string="Terminar pertenencia" type="object" class="oe_highlight" invisible="state != 'pending_clearance'"/>
                     <button name="action_cancel_clearance" string="Cancelar Paz y Salvo" type="object" class="btn-secondary" invisible="state != 'pending_clearance'"/>
+                    <button name="action_revert_clearance" string="Revertir" type="object" class="btn-secondary" invisible="state != 'closed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,active,pending_clearance,closed"/>
                 </header>
                 <sheet>
@@ -44,7 +45,7 @@
                         <field name="comodato_signed" readonly="state != 'draft'"/>
                         <field name="paz_y_salvo_signed" invisible="state in ('draft', 'active')" readonly="state == 'closed'"/>
                     </group>
-                    <group string="Observaciones" invisible="state in ('draft', 'active')">
+                    <group string="Observaciones de devolución" invisible="state in ('draft', 'active')">
                         <field name="notes" placeholder="Escribe observaciones sobre la devolución del activo..." readonly="state == 'closed'"/>
                     </group>
                 </sheet>
