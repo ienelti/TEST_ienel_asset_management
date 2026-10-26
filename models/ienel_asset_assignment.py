@@ -81,6 +81,18 @@ class IenelAssetAssignment(models.Model):
     def action_reset_draft(self):
         for rec in self:
             rec.state = 'draft'
+    
+    def action_cancel_clearance(self):
+        for rec in self:
+            rec.state = 'active'
+    
+    def action_close(self):
+        for rec in self:
+            if not rec.end_date:
+                raise UserError(_("Debe ingresar la 'Fecha fin' para poder terminar la pertenencia."))
+            if not rec.paz_y_salvo_signed:
+                raise UserError(_("Debe marcar la casilla 'Paz y Salvo' como firmado para poder terminar la pertenencia."))
+            rec.state = 'closed'
             
     @api.depends('asset_id', 'asset_id.name', 'asset_id.serial_number')
     def _compute_display_name(self):
