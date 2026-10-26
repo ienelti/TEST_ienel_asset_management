@@ -159,3 +159,12 @@ class IenelAsset(models.Model):
             vals['serial_number'] = vals['serial_number'].upper()
         return super().write(vals)
     
+    @api.depends('name', 'serial_number')
+    def _compute_display_name(self):
+        for record in self:
+            asset_name = record.name or ''
+            if record.serial_number:
+                record.display_name = f"{asset_name} [{record.serial_number}]"
+            else:
+                record.display_name = asset_name
+    

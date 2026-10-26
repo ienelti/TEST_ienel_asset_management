@@ -81,3 +81,14 @@ class IenelAssetAssignment(models.Model):
     def action_reset_draft(self):
         for rec in self:
             rec.state = 'draft'
+            
+    @api.depends('asset_id', 'asset_id.name', 'asset_id.serial_number')
+    def _compute_display_name(self):
+        for record in self:
+            if record.asset_id:
+                asset_name = record.asset_id.name or ''
+                if record.asset_id.serial_number:
+                    record.display_name = f"{asset_name} [{record.asset_id.serial_number}]"
+                else:
+                    record.display_name = asset_name
+            else: record.display_name = _("Pertenencia")
