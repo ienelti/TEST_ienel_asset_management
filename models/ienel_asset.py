@@ -116,8 +116,10 @@ class IenelAsset(models.Model):
         tracking=True
     )
     location_name = fields.Char(
+        related='lot_id.location_id.display_name',
         string='Ubicación en Bodega',
-        tracking=True
+        store=True,
+        readonly=True
     )
 
     # Umbral Contable

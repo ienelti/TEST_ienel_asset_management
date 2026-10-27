@@ -87,7 +87,7 @@
                     <div class="oe_title">
                         <label for="code"/>
                         <h1>
-                            <field name="code" placeholder="Código Único (ej. AF-00001)" class="text-uppercase"/>
+                            <field name="code" placeholder="Código Único" class="text-uppercase"/>
                         </h1>
                         <label for="lot_id" string="Número de serie"/>
                         <h2>
@@ -108,8 +108,8 @@
                         <group string="Ubicación y asignaciones">
                             <field name="person_in_charge_id" readonly="1"/>
                             <field name="company_id"/>
-                            <field name="location_name" placeholder="ej. Bodega Principal - Estante B"/>
-                            <field name="analytic_account" placeholder="ej. CC-1020 Operaciones"/>
+                            <field name="location_name" readonly="1"/>
+                            <field name="analytic_account"/>
                             <field name="analytic_start_date"/>
                             <field name="active" invisible="1"/>
                             <field name="requires_accounting_asset" invisible="1"/>
