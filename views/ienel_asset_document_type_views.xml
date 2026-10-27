@@ -8,7 +8,6 @@
             <list string="Tipos de Documento" editable="bottom">
                 <field name="name"/>
                 <field name="code"/>
-                <field name="active" widget="boolean_toggle"/>
             </list>
         </field>
     </record>
