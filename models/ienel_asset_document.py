@@ -114,7 +114,7 @@ class IenelAssetDocument(models.Model):
         })
         self.asset_id.message_post(
             body=_(
-                "📄 Documento Actualizado: Se cargó el archivo %s (%s) por %s."
+                "Documento Actualizado: Se cargó el archivo %s (%s) por %s."
             ) % (doc_type_label, std_filename, self.env.user.name)
         )
 
