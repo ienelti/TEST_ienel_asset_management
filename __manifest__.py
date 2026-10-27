@@ -9,7 +9,7 @@
         'base',
         'mail',
         'stock',
-        'ienel_onedrive_store',
+        'TEST_ienel_onedrive_store',
     ],
     'data': [
         'security/ir.model.access.csv',
