@@ -129,7 +129,13 @@ class IenelAsset(models.Model):
         compute='_compute_requires_accounting_asset',
         store=True
     )
-
+    
+    document_ids = fields.One2many(
+        'ienel.asset.document',
+        'asset_id',
+        string='Documentos del Activo'
+    )
+    
     @api.depends('purchase_value')
     def _compute_requires_accounting_asset(self):
         threshold = 2489950.0

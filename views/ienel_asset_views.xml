@@ -115,6 +115,21 @@
                             <field name="requires_accounting_asset" invisible="1"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Gestión Documental" name="documents">
+                            <field name="document_ids">
+                                <list editable="bottom" string="Documentos de la Ficha del Activo">
+                                    <field name="doc_type"/>
+                                    <field name="file_binary" filename="file_filename" string="Cargar Archivo"/>
+                                    <field name="file_filename" column_invisible="True"/>
+                                    <field name="name"/>
+                                    <field name="upload_user_id" readonly="1"/>
+                                    <field name="upload_datetime" readonly="1"/>
+                                    <button name="action_open_onedrive_url" string="Ver en OneDrive" type="object" icon="fa-external-link" invisible="not onedrive_url"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
