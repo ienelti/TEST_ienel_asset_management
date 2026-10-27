@@ -86,23 +86,32 @@ class IenelAssetDocument(models.Model):
         return res
     
     def unlink(self):
-        """
-        Al eliminar el registro en Odoo, elimina automáticamente el archivo en OneDrive
-        y registra la trazabilidad en el Chatter del Activo Fijo.
-        """
+        """Sobreescribe el borrado para eliminar el archivo en OneDrive(por ID o por Ruta) antes de borrar el registro en Odoo."""
+        
         onedrive_service = self.env['onedrive.service']
         for rec in self:
-            if rec.onedrive_item_id:
-                try:
-                    onedrive_service.delete_file_from_onedrive(rec.onedrive_item_id)
-                except Exception as e:
-                    _logger.warning("Error al intentar eliminar el archivo %s de OneDrive: %s", rec.onedrive_item_id, str(e))   
+            folder_path = (
+                f"Activos Fijos/{rec.asset_id.code.upper()}"
+                if rec.asset_id and rec.asset_id.code
+                else False
+            )
+            file_path = f"{folder_path}/{rec.name}" if folder_path and rec.name else False
+
+            # Invocar borrado con mecanismo de respaldo
+            onedrive_service.delete_file_from_onedrive(
+                item_id=rec.onedrive_item_id,
+                file_path=file_path
+            )
+
             if rec.asset_id:
-                doc_type_label = dict(self._fields['doc_type'].selection).get(rec.doc_type) or rec.doc_type
+                doc_type_label = (
+                    dict(self._fields['doc_type'].selection).get(rec.doc_type)
+                    or rec.doc_type
+                )
                 rec.asset_id.message_post(
-                    body=_("Documento Eliminado: Se eliminó el documento %s (%s) en OneDrive por %s.") % (
-                        doc_type_label, rec.name or '', self.env.user.name 
-                    )
+                    body=_(
+                        "Documento Eliminado: Se eliminó el documento %s (%s) por %s."
+                    ) % (doc_type_label, rec.name or '', self.env.user.name)
                 )
         return super().unlink()
 
