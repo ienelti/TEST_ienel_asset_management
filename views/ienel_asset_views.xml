@@ -119,7 +119,8 @@
                         <page string="Gestión Documental" name="documents">
                             <field name="document_ids">
                                 <list editable="bottom" string="Documentos de la Ficha del Activo">
-                                    <field name="doc_type"/>
+                                    <field name="available_doc_type_ids" column_invisible="True"/>
+                                    <field name="doc_type_id" domain="[('id', 'in', available_doc_type_ids)]"/>
                                     <field name="file_binary" filename="file_filename" string="Cargar Archivo"/>
                                     <field name="file_filename" column_invisible="True"/>
                                     <field name="name"/>

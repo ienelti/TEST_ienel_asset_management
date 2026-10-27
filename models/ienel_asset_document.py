@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 class IenelAssetDocument(models.Model):
     _name = 'ienel.asset.document'
     _description = 'Documento de Activo Fijo'
-    _order = 'doc_type asc, id desc'
+    _order = 'id desc'
 
     asset_id = fields.Many2one(
         'ienel.asset',
@@ -18,11 +18,18 @@ class IenelAssetDocument(models.Model):
         required=True,
         ondelete='cascade'
     )
-    doc_type = fields.Selection([
-        ('hoja_de_vida', 'Hoja de Vida'),
-        ('ficha_tecnica', 'Ficha Técnica'),
-        ('manual', 'Manual'),
-    ], string='Tipo de Documento', required=True)
+    doc_type_id = fields.Many2one(
+        'ienel.asset.document.type',
+        string='Tipo de Documento',
+        required=True,
+        ondelete='restrict'
+    )
+    # Campo técnico para filtrar dinámicamente los tipos no registrados aún en este activo
+    available_doc_type_ids = fields.Many2many(
+        'ienel.asset.document.type',
+        compute='_compute_available_doc_type_ids',
+        string='Tipos Disponibles'
+    )
     name = fields.Char(
         string='Nombre del Archivo (Estandarizado)',
         readonly=True,
@@ -49,6 +56,21 @@ class IenelAssetDocument(models.Model):
         readonly=True
     )
 
+    _sql_constraints = [
+        ('asset_doc_type_uniq', 'unique(asset_id, doc_type_id)', 'Ya existe un documento de este tipo cargado para este activo fijo.'),
+    ]
+
+    @api.depends('asset_id', 'asset_id.document_ids.doc_type_id')
+    def _compute_available_doc_type_ids(self):
+        all_types = self.env['ienel.asset.document.type'].search([])
+        for rec in self:
+            if rec.asset_id:
+                # Excluir los tipos que ya han sido asignados a otros documentos de este activo
+                used_types = rec.asset_id.document_ids.filtered(lambda d: d.id != rec.id).mapped('doc_type_id')
+                rec.available_doc_type_ids = all_types - used_types
+            else:
+                rec.available_doc_type_ids = all_types
+
     def _normalize_slug(self, text):
         if not text:
             return ''
@@ -59,13 +81,8 @@ class IenelAssetDocument(models.Model):
         text = re.sub(r'[^a-z0-9\-]', '-', text)
         return re.sub(r'-+', '-', text).strip('-')
 
-    def _compute_standardized_filename(self, doc_type, asset_code, original_filename):
-        type_map = {
-            'hoja_de_vida': 'hoja-de-vida',
-            'ficha_tecnica': 'ficha-tecnica',
-            'manual': 'manual',
-        }
-        type_slug = type_map.get(doc_type, 'documento')
+    def _compute_standardized_filename(self, doc_type_record, asset_code, original_filename):
+        type_slug = self._normalize_slug(doc_type_record.code or doc_type_record.name) or 'documento'
         code_slug = self._normalize_slug(asset_code or 'activo')
         ext = os.path.splitext(original_filename or '')[1].lower() or '.pdf'
         return f"{type_slug}-{code_slug}{ext}"
@@ -84,10 +101,8 @@ class IenelAssetDocument(models.Model):
             for rec in self:
                 rec._process_onedrive_upload()
         return res
-    
+
     def unlink(self):
-        """Sobreescribe el borrado para eliminar el archivo en OneDrive(por ID o por Ruta) antes de borrar el registro en Odoo."""
-        
         onedrive_service = self.env['onedrive.service']
         for rec in self:
             folder_path = (
@@ -96,18 +111,12 @@ class IenelAssetDocument(models.Model):
                 else False
             )
             file_path = f"{folder_path}/{rec.name}" if folder_path and rec.name else False
-
-            # Invocar borrado con mecanismo de respaldo
             onedrive_service.delete_file_from_onedrive(
                 item_id=rec.onedrive_item_id,
                 file_path=file_path
             )
-
             if rec.asset_id:
-                doc_type_label = (
-                    dict(self._fields['doc_type'].selection).get(rec.doc_type)
-                    or rec.doc_type
-                )
+                doc_type_label = rec.doc_type_id.name if rec.doc_type_id else 'Documento'
                 rec.asset_id.message_post(
                     body=_(
                         "Documento Eliminado: Se eliminó el documento %s (%s) por %s."
@@ -121,13 +130,11 @@ class IenelAssetDocument(models.Model):
             raise UserError(_("El activo fijo debe tener un 'Código Único' asignado antes de subir documentos."))
 
         std_filename = self._compute_standardized_filename(
-            self.doc_type,
+            self.doc_type_id,
             self.asset_id.code,
             self.file_filename
         )
         folder_path = f"Activos Fijos/{self.asset_id.code.upper()}"
-
-        # Garantizar decodificación limpia de Base64 para no corromper el PDF
         raw_binary = base64.b64decode(self.file_binary) if self.file_binary else b''
 
         onedrive_service = self.env['onedrive.service']
@@ -137,7 +144,7 @@ class IenelAssetDocument(models.Model):
             binary_content=raw_binary
         )
 
-        doc_type_label = dict(self._fields['doc_type'].selection).get(self.doc_type)
+        doc_type_label = self.doc_type_id.name
         self.write({
             'name': std_filename,
             'onedrive_item_id': res_upload.get('item_id'),
@@ -153,7 +160,6 @@ class IenelAssetDocument(models.Model):
         )
 
     def action_open_internal_preview(self):
-        """Abre el archivo directamente dentro del navegador desde el servidor Odoo."""
         self.ensure_one()
         if not self.onedrive_item_id:
             raise UserError(_("El documento no se encuentra cargado en el almacenamiento."))
