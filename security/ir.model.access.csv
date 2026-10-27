@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_ienel_asset_user,access_ienel_asset_user,model_ienel_asset,base.group_user,1,1,1,1
 access_ienel_asset_type_user,access_ienel_asset_type_user,model_ienel_asset_type,base.group_user,1,1,1,1
 access_ienel_asset_assignment,ienel.asset.assignment,model_ienel_asset_assignment,base.group_user,1,1,1,1
+access_ienel_asset_document,access_ienel_asset_document,model_ienel_asset_document,base.group_user,1,1,1,1
