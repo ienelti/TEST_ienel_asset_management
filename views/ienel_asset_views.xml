@@ -98,7 +98,7 @@
                     <!-- Grupos reorganizados según el flujo de inventario -->
                     <group>
                         <group string="Información del Activo">
-                            <field name="name" string="Nombre"/>
+                            <field name="name" string="Descripción"/>
                             <field name="brand" string="Marca"/>
                             <field name="reference" string="Modelo / Referencia"/>
                             <field name="asset_type_id"/>

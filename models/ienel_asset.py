@@ -16,6 +16,7 @@ class IenelAsset(models.Model):
         'stock.lot',
         string='Número de serie',
         required=True,
+        ondelete='restrict',
         tracking=True
     )
     product_id = fields.Many2one(

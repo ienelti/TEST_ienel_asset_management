@@ -11,7 +11,7 @@ class IenelAssetAssignment(models.Model):
         'ienel.asset',
         string='Activo Fijo',
         required=True,
-        ondelete='cascade',
+        ondelete='restrict',
         tracking=True
     )
     partner_id = fields.Many2one(
@@ -108,3 +108,6 @@ class IenelAssetAssignment(models.Model):
                 else:
                     record.display_name = asset_name
             else: record.display_name = _("Pertenencia")
+    
+    @api.ondelete(at\_uninstall=False) def \_unlink\_prevent\_if\_processed\_or\_signed(self): for rec in self: if rec.state != 'draft' or rec.comodato\_signed or rec.paz\_y\_salvo\_signed: raise UserError(\_( "No se puede eliminar la pertenencia del activo '%s' ya que se encuentra en estado '%s' " "o cuenta con documentos firmados asociados. Para mantener la trazabilidad legal, este registro debe conservarse." ) % (rec.asset\_id.display\_name, dict(self.\_fields['state'].selection).get(rec.state)))
+    
