@@ -1,9 +1,10 @@
 import base64
 import os
 import re
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 class IenelAssetDocument(models.Model):
     _name = 'ienel.asset.document'
@@ -31,8 +32,10 @@ class IenelAssetDocument(models.Model):
         attachment=False
     )
     file_filename = fields.Char(string='Nombre Original')
+    
     onedrive_item_id = fields.Char(string='ID OneDrive', readonly=True)
     onedrive_url = fields.Char(string='Enlace OneDrive', readonly=True)
+    
     upload_user_id = fields.Many2one(
         'res.users',
         string='Cargado por',
@@ -80,6 +83,27 @@ class IenelAssetDocument(models.Model):
             for rec in self:
                 rec._process_onedrive_upload()
         return res
+    
+    def unlink(self):
+        """
+        Al eliminar el registro en Odoo, elimina automáticamente el archivo en OneDrive
+        y registra la trazabilidad en el Chatter del Activo Fijo.
+        """
+        onedrive_service = self.env['onedrive.service']
+        for rec in self:
+            if rec.onedrive_item_id:
+                try:
+                    onedrive_service.delete_file_from_onedrive(rec.onedrive_item_id)
+                except Exception as e:
+                    _logger.warning("Error al intentar eliminar el archivo %s de OneDrive: %s", rec.onedrive_item_id, str(e))   
+            if rec.asset_id:
+                doc_type_label = dict(self._fields['doc_type'].selection).get(rec.doc_type) or rec.doc_type
+                rec.asset_id.message_post(
+                    body=_("Documento Eliminado: Se eliminó el documento %s (%s) en OneDrive por %s.") % (
+                        doc_type_label, rec.name or '', self.env.user.name 
+                    )
+                )
+        return super().unlink()
 
     def _process_onedrive_upload(self):
         self.ensure_one()
