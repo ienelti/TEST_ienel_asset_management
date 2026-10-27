@@ -125,7 +125,7 @@
                                     <field name="name"/>
                                     <field name="upload_user_id" readonly="1"/>
                                     <field name="upload_datetime" readonly="1"/>
-                                    <button name="action_open_onedrive_url" string="Ver en OneDrive" type="object" icon="fa-external-link" invisible="not onedrive_url"/>
+                                    <button name="action_open_internal_preview" string="Ver Documento" type="object" icon="fa-eye" invisible="not onedrive_item_id"/>
                                 </list>
                             </field>
                         </page>
