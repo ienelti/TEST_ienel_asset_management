@@ -109,5 +109,12 @@ class IenelAssetAssignment(models.Model):
                     record.display_name = asset_name
             else: record.display_name = _("Pertenencia")
     
-    @api.ondelete(at\_uninstall=False) def \_unlink\_prevent\_if\_processed\_or\_signed(self): for rec in self: if rec.state != 'draft' or rec.comodato\_signed or rec.paz\_y\_salvo\_signed: raise UserError(\_( "No se puede eliminar la pertenencia del activo '%s' ya que se encuentra en estado '%s' " "o cuenta con documentos firmados asociados. Para mantener la trazabilidad legal, este registro debe conservarse." ) % (rec.asset\_id.display\_name, dict(self.\_fields['state'].selection).get(rec.state)))
+    @api.ondelete(at_uninstall=False)
+    def _unlink_prevent_if_processed_or_signed(self):
+        for rec in self:
+            if rec.state != 'draft' or rec.comodato_signed or rec.paz_y_salvo_signed:
+                raise UserError(_(
+                    "No se puede eliminar la pertenencia del activo '%s' ya que se encuentra en estado '%s' "
+                    "o cuenta con documentos firmados asociados. Para mantener la trazabilidad legal, este registro debe conservarse."
+                ) % (rec.asset_id.display_name, dict(self._fields['state'].selection).get(rec.state)))
     
