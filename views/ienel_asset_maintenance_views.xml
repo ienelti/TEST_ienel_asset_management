@@ -42,6 +42,7 @@
                         <field name="notes" placeholder="Escriba aquí detalles del mantenimiento." nolabel="1" colspan="2"/>
                     </group>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

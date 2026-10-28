@@ -11,38 +11,44 @@ _logger = logging.getLogger(__name__)
 class IenelAssetMaintenance(models.Model):
     _name = 'ienel.asset.maintenance'
     _description = 'Mantenimiento de Activo Fijo'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'maintenance_date desc, id desc'
 
     asset_id = fields.Many2one(
         'ienel.asset',
         string='Activo Fijo',
         required=True,
-        ondelete='restrict'
+        ondelete='restrict',
+        tracking=True
     )
     maintenance_type = fields.Selection([
         ('preventive', 'Preventivo'),
         ('corrective', 'Correctivo'),
-    ], string='Tipo de Mantenimiento', required=True, default='preventive')
+    ], string='Tipo de Mantenimiento', required=True, default='preventive', tracking=True)
     maintenance_date = fields.Date(
         string='Fecha de Mantenimiento',
         required=True,
-        help='Fecha en la cual se realizó el mantenimiento.'
+        help='Fecha en la cual se realizó el mantenimiento.',
+        tracking=True
     )
     next_maintenance_date = fields.Date(
         string='Próxima Fecha de Mantenimiento',
         required=True,
-        help='Fecha programada para el siguiente mantenimiento.'
+        help='Fecha programada para el siguiente mantenimiento.',
+        tracking=True
     )
     cost = fields.Float(
         string='Valor',
         required=True,
         digits=(16, 2),
-        help='Costo total del servicio de mantenimiento.'
+        help='Costo total del servicio de mantenimiento.',
+        tracking=True
     )
     # Campos de soporte de documento en OneDrive
     certificate_file = fields.Binary(
         string='Cargar Certificado / Soporte',
-        attachment=False
+        attachment=False,
+        tracking=True
     )
     certificate_filename = fields.Char(string='Nombre del Archivo')
     onedrive_item_id = fields.Char(string='ID OneDrive', readonly=True)
