@@ -7,7 +7,6 @@ class IenelAssetMaintenance(models.Model):
     _name = 'ienel.asset.maintenance'
     _description = 'Mantenimiento de Activo Fijo'
     _order = 'maintenance_date desc, id desc'
-    _rec_name = 'maintenance_type'
 
     asset_id = fields.Many2one(
         'ienel.asset',
@@ -42,3 +41,17 @@ class IenelAssetMaintenance(models.Model):
     )
     certificate_filename = fields.Char(string='Nombre del Archivo')
     notes = fields.Text(string='Observaciones')
+    
+    @api.depends('maintenance_type', 'asset_id', 'asset_id.code', 'asset_id.name', 'maintenance_date')
+    def _compute_display_name(self):
+        type_dict = dict(self._fields['maintenance_type'].selection)
+        for rec in self:
+            m_type = type_dict.get(rec.maintenance_type, 'Mantenimiento')
+            asset_ref = rec.asset_id.code or rec.asset_id.name or ''
+            if asset_ref and rec.maintenance_date:
+                date_str = rec.maintenance_date.strftime('%d/%m/%Y')
+                rec.display_name = f"{m_type} - {asset_ref} ({date_str})"
+            elif asset_ref:
+                rec.display_name = f"{m_type} - {asset_ref}"
+            else:
+                rec.display_name = m_type

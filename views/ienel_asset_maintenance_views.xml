@@ -11,7 +11,6 @@
                 <field name="maintenance_type"/>
                 <field name="next_maintenance_date"/>
                 <field name="cost" widget="monetary"/>
-                <field name="certificate_filename" string="Soporte"/>
             </list>
         </field>
     </record>
@@ -37,7 +36,7 @@
                         </group>
                     </group>
                     <group string="Observaciones">
-                        <field name="notes" placeholder="Escriba aquí detalles del trabajo realizado, proveedor, repuestos cambiados, etc." nolabel="1"/>
+                        <field name="notes" placeholder="Escriba aquí detalles del mantenimiento." nolabel="1" colspan="2"/>
                     </group>
                 </sheet>
             </form>
