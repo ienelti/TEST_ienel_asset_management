@@ -4,3 +4,4 @@ access_ienel_asset_type_user,access_ienel_asset_type_user,model_ienel_asset_type
 access_ienel_asset_assignment,ienel.asset.assignment,model_ienel_asset_assignment,base.group_user,1,1,1,1
 access_ienel_asset_document_type,access_ienel_asset_document_type,model_ienel_asset_document_type,base.group_user,1,1,1,1
 access_ienel_asset_document,access_ienel_asset_document,model_ienel_asset_document,base.group_user,1,1,1,1
+access_ienel_asset_maintenance,access_ienel_asset_maintenance,model_ienel_asset_maintenance,base.group_user,1,1,1,1

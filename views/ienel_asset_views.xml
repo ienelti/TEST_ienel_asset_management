@@ -77,6 +77,9 @@
                         <button name="action_open_assignments" type="object" class="oe_stat_button" icon="fa-users">
                             <field name="assignment_count" widget="statinfo" string="Pertenencias"/>
                         </button>
+                        <button name="action_open_maintenances" type="object" class="oe_stat_button" icon="fa-wrench">
+                            <field name="maintenance_count" widget="statinfo" string="Mantenimientos"/>
+                        </button>
                     </div>
                     <div class="alert alert-warning text-center" role="alert" invisible="not requires_accounting_asset">
                         <strong>¡Atención!</strong> El valor de este activo supera el umbral configurado. Deberá relacionar un activo contable al guardar el registro.

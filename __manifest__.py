@@ -2,7 +2,7 @@
     'name': 'Gestión de Activos Fijos IENEL',
     'version': '19.0.1.0.0',
     'category': 'Operations/Assets',
-    'summary': 'Módulo base minimalista para Activos Fijos.',
+    'summary': 'Módulo de Activos Fijos.',
     'author': 'IENEL',
     'license': 'LGPL-3',
     'depends': [
@@ -18,8 +18,10 @@
         'views/ienel_asset_type_views.xml',
         'views/ienel_asset_document_type_views.xml',
         'views/ienel_asset_assignment_views.xml',
+        'views/ienel_asset_maintenance_views.xml',
         'views/menu_views.xml',
         ],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

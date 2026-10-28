@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 class IenelAsset(models.Model):
     _name = 'ienel.asset'
@@ -130,10 +131,22 @@ class IenelAsset(models.Model):
         store=True
     )
     
+    # Gestión documental
     document_ids = fields.One2many(
         'ienel.asset.document',
         'asset_id',
         string='Documentos del Activo'
+    )
+    
+    # Relación con Mantenimientos
+    maintenance_ids = fields.One2many(
+        'ienel.asset.maintenance',
+        'asset_id',
+        string='Mantenimientos'
+    )
+    maintenance_count = fields.Integer(
+        string='Mantenimientos',
+        compute='_compute_maintenance_count'
     )
     
     @api.depends('purchase_value')
@@ -197,3 +210,27 @@ class IenelAsset(models.Model):
                 record.display_name = f"{asset_name} [{serial}]"
             else:
                 record.display_name = asset_name
+    
+    @api.depends('maintenance_ids')
+    def _compute_maintenance_count(self):
+        for rec in self:
+            rec.maintenance_count = len(rec.maintenance_ids)
+            
+    def action_open_maintenances(self):
+        self.ensure_one()
+        return {
+            'name': _('Mantenimientos del Activo'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ienel.asset.maintenance',
+            'view_mode': 'list,form',
+            'domain': [('asset_id', '=', self.id)],
+            'context': {'default_asset_id': self.id},
+        }
+        
+    def unlink(self):
+        for rec in self:
+            if rec.maintenance_ids:
+                raise UserError(_(
+                    "No se puede eliminar el activo fijo '%s' (%s) porque tiene %d registro(s) de mantenimiento asociado(s)." 
+                ) % (rec.name, rec.code or '', len(rec.maintenance_ids)))
+        return super().unlink()
