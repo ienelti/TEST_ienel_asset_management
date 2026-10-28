@@ -48,7 +48,7 @@ class IenelAssetMaintenance(models.Model):
     onedrive_item_id = fields.Char(string='ID OneDrive', readonly=True)
     onedrive_url = fields.Char(string='Enlace OneDrive', readonly=True)
     notes = fields.Text(string='Observaciones')
-    
+
     @api.depends('maintenance_type', 'asset_id', 'asset_id.code', 'asset_id.name', 'maintenance_date')
     def _compute_display_name(self):
         type_dict = dict(self._fields['maintenance_type'].selection)
@@ -77,7 +77,7 @@ class IenelAssetMaintenance(models.Model):
         type_prefix = 'mp' if maintenance_type == 'preventive' else 'mc'
         code_slug = self._normalize_slug(asset_code or 'activo')
         date_str = maintenance_date.strftime('%d%m%y') if maintenance_date else '000000'
-        ext = os.path.splitext(original_filename or '').lower() or '.pdf'
+        ext = os.path.splitext(original_filename or '')[1].lower() or '.pdf'
         return f"{type_prefix}-{code_slug}-{date_str}{ext}"
 
     @api.model_create_multi
@@ -116,7 +116,7 @@ class IenelAssetMaintenance(models.Model):
             if rec.asset_id:
                 m_type_label = dict(self._fields['maintenance_type'].selection).get(rec.maintenance_type)
                 rec.asset_id.message_post(
-                    body=_("🗑️ Mantenimiento Eliminado: Se eliminó un registro de mantenimiento de tipo '%s'.") % m_type_label
+                    body=_("Mantenimiento Eliminado: Se eliminó un registro de mantenimiento de tipo '%s'.") % m_type_label
                 )
         return super().unlink()
 
@@ -150,7 +150,7 @@ class IenelAssetMaintenance(models.Model):
         })
         self.asset_id.message_post(
             body=_(
-                "🔧 Certificado de Mantenimiento Cargado: Se adjuntó el soporte %s (%s) en OneDrive."
+                "Certificado de Mantenimiento Cargado: Se adjuntó el soporte %s (%s) en OneDrive."
             ) % (m_type_label, std_filename)
         )
 
