@@ -21,7 +21,6 @@ class IenelAssetMaintenance(models.Model):
     maintenance_date = fields.Date(
         string='Fecha de Mantenimiento',
         required=True,
-        default=fields.Date.context_today,
         help='Fecha en la cual se realizó el mantenimiento.'
     )
     next_maintenance_date = fields.Date(
