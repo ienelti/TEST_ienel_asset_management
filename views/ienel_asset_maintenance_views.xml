@@ -36,7 +36,7 @@
                         </group>
                     </group>
                     <group string="Observaciones">
-                        <field name="notes" placeholder="Escriba aquí detalles del mantenimiento." nolabel="1" colspan="2"/>
+                        <field name="notes" placeholder="Escriba aquí detalles del mantenimiento." nolabel="1" colspan="1"/>
                     </group>
                 </sheet>
             </form>
