@@ -11,6 +11,11 @@
     <menuitem id="menu_ienel_asset_all" name="Todos los activos" parent="menu_ienel_asset_main" action="action_ienel_asset" sequence="10"/>
     <menuitem id="menu_ienel_asset_assignment_menu" name="Pertenencias" parent="menu_ienel_asset_main" action="action_ienel_asset_assignment" sequence="20"/>
 
+    <!-- Pestaña Principal: Operaciones -->
+    <menuitem id="menu_ienel_asset_operations" name="Operaciones" parent="menu_ienel_asset_root" sequence="15"/>
+    <menuitem id="menu_ienel_asset_maintenance_global" name="Mantenimientos" parent="menu_ienel_asset_operations" action="action_ienel_asset_maintenance" sequence="10"/>
+    <menuitem id="menu_ienel_asset_calibration_global" name="Calibraciones" parent="menu_ienel_asset_operations" sequence="20"/>
+
     <!-- Pestaña Principal: Configuración -->
     <menuitem id="menu_ienel_asset_config" name="Configuración" parent="menu_ienel_asset_root" sequence="100"/>
     <menuitem id="menu_ienel_asset_type" name="Tipos de activos" parent="menu_ienel_asset_config" action="action_ienel_asset_type" sequence="10"/>

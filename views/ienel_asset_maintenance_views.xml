@@ -6,13 +6,13 @@
         <field name="name">ienel.asset.maintenance.list</field>
         <field name="model">ienel.asset.maintenance</field>
         <field name="arch" type="xml">
-            <list string="Mantenimientos del Activo">
+            <list string="Mantenimientos de Activos Fijos">
+                <field name="asset_id"/>
                 <field name="maintenance_date"/>
                 <field name="maintenance_type"/>
                 <field name="next_maintenance_date"/>
                 <field name="cost" widget="monetary"/>
-                <field name="certificate_filename" string="Documento"/>
-                <button name="action_open_internal_preview" string="Ver Soporte" type="object" icon="fa-eye" invisible="not onedrive_item_id"/>
+                <button name="action_open_internal_preview" string="Ver documento" type="object" icon="fa-eye" invisible="not onedrive_item_id"/>
             </list>
         </field>
     </record>
@@ -26,7 +26,7 @@
                 <sheet>
                     <group>
                         <group string="Información del Mantenimiento">
-                            <field name="asset_id" readonly="1"/>
+                            <field name="asset_id" readonly="context.get('default_asset_id', False)"/>
                             <field name="maintenance_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="cost"/>
                         </group>
