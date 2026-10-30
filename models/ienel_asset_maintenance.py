@@ -12,6 +12,7 @@ class IenelAssetMaintenance(models.Model):
     _name = 'ienel.asset.maintenance'
     _description = 'Mantenimiento de Activo Fijo'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = 'asset_id'
     _order = 'maintenance_date desc, id desc'
 
     asset_id = fields.Many2one(

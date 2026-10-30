@@ -5,7 +5,6 @@ class IenelAssetAssignment(models.Model):
     _name = 'ienel.asset.assignment'
     _description = 'Historial de Pertenencias'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _rec_name = 'display_name'
     _order = 'start_date desc, id desc'
 
     asset_id = fields.Many2one(
