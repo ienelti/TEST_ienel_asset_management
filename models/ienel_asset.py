@@ -223,8 +223,10 @@ class IenelAsset(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'ienel.asset.maintenance',
             'view_mode': 'list,form',
-            'domain': [('asset_id', '=', self.id)],
-            'context': {'default_asset_id': self.id},
+            'context': {
+                'default_asset_id': self.id,
+                'search_default_asset_id': self.id,
+            },
         }
         
     def unlink(self):

@@ -26,7 +26,7 @@
                 <sheet>
                     <group>
                         <group string="Información del Mantenimiento">
-                            <field name="asset_id" readonly="context.get('default_asset_id', False)"/>
+                            <field name="asset_id"/>
                             <field name="maintenance_type" widget="radio" options="{'horizontal': true}"/>
                             <field name="cost"/>
                         </group>
@@ -44,6 +44,27 @@
                 </sheet>
                 <chatter/>
             </form>
+        </field>
+    </record>
+
+    <!-- Vista Búsqueda / Filtros de Mantenimientos -->
+    <record id="view_ienel_asset_maintenance_search" model="ir.ui.view">
+        <field name="name">ienel.asset.maintenance.search</field>
+        <field name="model">ienel.asset.maintenance</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Mantenimientos">
+                <field name="asset_id"/>
+                <field name="maintenance_type"/>
+                <field name="notes"/>
+                <filter string="Preventivos" name="preventive" domain="[('maintenance_type', '=', 'preventive')]"/>
+                <filter string="Correctivos" name="corrective" domain="[('maintenance_type', '=', 'corrective')]"/>
+                <separator/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Activo Fijo" name="group_by_asset" context="{'group_by': 'asset_id'}"/>
+                    <filter string="Tipo de Mantenimiento" name="group_by_type" context="{'group_by': 'maintenance_type'}"/>
+                    <filter string="Fecha de Mantenimiento" name="group_by_date" context="{'group_by': 'maintenance_date'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
