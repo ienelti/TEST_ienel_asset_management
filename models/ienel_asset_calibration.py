@@ -43,7 +43,7 @@ class IenelAssetCalibration(models.Model):
     )
     # Campos de soporte de documento en OneDrive
     certificate_file = fields.Binary(
-        string='Cargar Certificado / Soporte',
+        string='Cargar Soporte',
         attachment=False,
         tracking=True
     )
@@ -146,7 +146,7 @@ class IenelAssetCalibration(models.Model):
             'certificate_file': False,
         })
         self.asset_id.message_post(
-            body=_("Certificado de Calibración Cargado: Se adjuntó el soporte %s en OneDrive.") % std_filename
+            body=_("Certificado de Calibración Cargado: Se adjuntó el soporte %s.") % std_filename
         )
 
     def action_open_internal_preview(self):

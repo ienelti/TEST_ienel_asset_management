@@ -47,7 +47,7 @@ class IenelAssetMaintenance(models.Model):
     )
     # Campos de soporte de documento en OneDrive
     certificate_file = fields.Binary(
-        string='Cargar Certificado / Soporte',
+        string='Cargar Soporte',
         attachment=False,
         tracking=True
     )
@@ -157,7 +157,7 @@ class IenelAssetMaintenance(models.Model):
         })
         self.asset_id.message_post(
             body=_(
-                "Certificado de Mantenimiento Cargado: Se adjuntó el soporte %s (%s) en OneDrive."
+                "Certificado de Mantenimiento Cargado: Se adjuntó el soporte %s (%s)."
             ) % (m_type_label, std_filename)
         )
 
