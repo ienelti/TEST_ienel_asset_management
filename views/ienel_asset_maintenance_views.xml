@@ -47,19 +47,21 @@
         </field>
     </record>
 
-    <!-- Vista Búsqueda / Filtros de Mantenimientos -->
+    <!-- Vista de Búsqueda Global -->
     <record id="view_ienel_asset_maintenance_search" model="ir.ui.view">
         <field name="name">ienel.asset.maintenance.search</field>
         <field name="model">ienel.asset.maintenance</field>
         <field name="arch" type="xml">
-            <search string="Buscar Mantenimientos">
+            <search>
                 <field name="asset_id"/>
                 <field name="maintenance_type"/>
+                <separator/>
                 <filter string="Preventivos" name="preventive" domain="[('maintenance_type', '=', 'preventive')]"/>
                 <filter string="Correctivos" name="corrective" domain="[('maintenance_type', '=', 'corrective')]"/>
-                <group expand="0" string="Agrupar Por">
-                    <filter string="Activo Fijo" name="group_by_asset" context="{'group_by': 'asset_id'}"/>
-                    <filter string="Tipo de Mantenimiento" name="group_by_type" context="{'group_by': 'maintenance_type'}"/>
+                <separator string="Agrupar por"/>
+                <group>
+                    <filter string="Activo Fijo" name="group_asset" context="{'group_by': 'asset_id'}"/>
+                    <filter string="Tipo de Mantenimiento" name="group_type" context="{'group_by': 'maintenance_type'}"/>
                 </group>
             </search>
         </field>
@@ -70,6 +72,7 @@
         <field name="name">Mantenimientos</field>
         <field name="res_model">ienel.asset.maintenance</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ienel_asset_maintenance_search"/>
     </record>
 
 </odoo>
