@@ -19,6 +19,7 @@
         'views/ienel_asset_document_type_views.xml',
         'views/ienel_asset_assignment_views.xml',
         'views/ienel_asset_maintenance_views.xml',
+        'views/ienel_asset_calibration_views.xml',
         'views/menu_views.xml',
         ],
     'installable': True,

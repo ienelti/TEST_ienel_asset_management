@@ -4,3 +4,4 @@ from . import ienel_asset_assignment
 from . import ienel_asset_document_type
 from . import ienel_asset_document
 from . import ienel_asset_maintenance
+from . import ienel_asset_calibration

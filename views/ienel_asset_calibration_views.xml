@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista Lista de Calibraciones -->
+    <record id="view_ienel_asset_calibration_tree" model="ir.ui.view">
+        <field name="name">ienel.asset.calibration.list</field>
+        <field name="model">ienel.asset.calibration</field>
+        <field name="arch" type="xml">
+            <list string="Calibraciones de Activos Fijos">
+                <field name="asset_id"/>
+                <field name="calibration_date"/>
+                <field name="next_calibration_date"/>
+                <field name="cost" widget="monetary"/>
+                <field name="certificate_filename" string="Certificado"/>
+                <button name="action_open_internal_preview" string="Ver Soporte" type="object" icon="fa-eye" invisible="not onedrive_item_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Formulario de Calibración -->
+    <record id="view_ienel_asset_calibration_form" model="ir.ui.view">
+        <field name="name">ienel.asset.calibration.form</field>
+        <field name="model">ienel.asset.calibration</field>
+        <field name="arch" type="xml">
+            <form string="Registro de Calibración">
+                <sheet>
+                    <group>
+                        <group string="Información de la Calibración">
+                            <field name="asset_id"/>
+                            <field name="cost"/>
+                        </group>
+                        <group string="Fechas y Soportes">
+                            <field name="calibration_date"/>
+                            <field name="next_calibration_date"/>
+                            <field name="certificate_file" filename="certificate_filename" string="Cargar Soporte"/>
+                            <field name="certificate_filename" readonly="1"/>
+                            <button name="action_open_internal_preview" string="Ver Soporte" type="object" icon="fa-eye" invisible="not onedrive_item_id"/>
+                        </group>
+                    </group>
+                    <group string="Observaciones">
+                        <field name="notes" placeholder="Escriba aquí detalles de la calibración realizada, laboratorio, patrón usado, etc." nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Búsqueda Global -->
+    <record id="view_ienel_asset_calibration_search" model="ir.ui.view">
+        <field name="name">ienel.asset.calibration.search</field>
+        <field name="model">ienel.asset.calibration</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="asset_id"/>
+                <separator string="Agrupar por"/>
+                <group>
+                    <filter string="Activo Fijo" name="group_asset" context="{'group_by': 'asset_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana Global -->
+    <record id="action_ienel_asset_calibration" model="ir.actions.act_window">
+        <field name="name">Calibraciones</field>
+        <field name="res_model">ienel.asset.calibration</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ienel_asset_calibration_search"/>
+    </record>
+
+</odoo>

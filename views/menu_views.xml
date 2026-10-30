@@ -14,7 +14,7 @@
     <!-- Pestaña Principal: Operaciones -->
     <menuitem id="menu_ienel_asset_operations" name="Operaciones" parent="menu_ienel_asset_root" sequence="15"/>
     <menuitem id="menu_ienel_asset_maintenance_global" name="Mantenimientos" parent="menu_ienel_asset_operations" action="action_ienel_asset_maintenance" sequence="10"/>
-    <menuitem id="menu_ienel_asset_calibration_global" name="Calibraciones" parent="menu_ienel_asset_operations" sequence="20"/>
+    <menuitem id="menu_ienel_asset_calibration_global" name="Calibraciones" parent="menu_ienel_asset_operations" action="action_ienel_asset_calibration" sequence="20"/>
 
     <!-- Pestaña Principal: Configuración -->
     <menuitem id="menu_ienel_asset_config" name="Configuración" parent="menu_ienel_asset_root" sequence="100"/>

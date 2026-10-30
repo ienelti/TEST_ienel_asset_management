@@ -149,6 +149,14 @@ class IenelAsset(models.Model):
         compute='_compute_maintenance_count'
     )
     
+    # Relación con Calibraciones
+    calibration_ids = fields.One2many(
+        'ienel.asset.calibration', 'asset_id', string='Calibraciones'
+    )
+    calibration_count = fields.Integer(
+        string='Número de Calibraciones', compute='_compute_calibration_count'
+    )
+    
     @api.depends('purchase_value')
     def _compute_requires_accounting_asset(self):
         threshold = 2489950.0
@@ -222,6 +230,24 @@ class IenelAsset(models.Model):
             'name': _('Mantenimientos del Activo'),
             'type': 'ir.actions.act_window',
             'res_model': 'ienel.asset.maintenance',
+            'view_mode': 'list,form',
+            'context': {
+                'default_asset_id': self.id,
+                'search_default_asset_id': self.id,
+            },
+        }
+    
+    @api.depends('calibration_ids')
+    def _compute_calibration_count(self):
+        for rec in self:
+            rec.calibration_count = len(rec.calibration_ids)
+    
+    def action_open_calibrations(self):
+        self.ensure_one()
+        return {
+            'name': _('Calibraciones del Activo'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ienel.asset.calibration',
             'view_mode': 'list,form',
             'context': {
                 'default_asset_id': self.id,
