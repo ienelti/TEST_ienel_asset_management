@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Rol 1: Usuario de Activos Fijos -->
+    <!-- 1. Categoría del Módulo (Título de la sección en la ficha de Usuario) -->
+    <record id="module_category_ienel_asset" model="ir.module.category">
+        <field name="name">Activos Fijos</field>
+        <field name="description">Gestión de accesos y roles para el módulo de Activos Fijos de IENEL</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- 2. Privilegio del Módulo (Odoo 19: Genera el selector exclusivo en la vista del Usuario) -->
+    <record id="res_groups_privilege_ienel_asset" model="res.groups.privilege">
+        <field name="name">Activos Fijos</field>
+        <field name="category_id" ref="module_category_ienel_asset"/>
+    </record>
+
+    <!-- 3. Roles / Grupos asignados al Privilegio -->
+    <!-- Rol 1: Usuario -->
     <record id="group_ienel_asset_user" model="res.groups">
-        <field name="name">Usuario de Activos Fijos</field>
+        <field name="name">Usuario</field>
+        <field name="privilege_id" ref="res_groups_privilege_ienel_asset"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="comment">Acceso de lectura e interacción básica para usuarios de activos fijos.</field>
     </record>
@@ -11,13 +26,15 @@
     <!-- Rol 2: Encargado de Activos Fijos -->
     <record id="group_ienel_asset_manager" model="res.groups">
         <field name="name">Encargado de Activos Fijos</field>
+        <field name="privilege_id" ref="res_groups_privilege_ienel_asset"/>
         <field name="implied_ids" eval="[(4, ref('group_ienel_asset_user'))]"/>
         <field name="comment">Gestión operativa del módulo y destinatario de alertas de mantenimientos y calibraciones.</field>
     </record>
 
-    <!-- Rol 3: Administrador de Activos Fijos -->
+    <!-- Rol 3: Administrador -->
     <record id="group_ienel_asset_admin" model="res.groups">
-        <field name="name">Administrador de Activos Fijos</field>
+        <field name="name">Administrador</field>
+        <field name="privilege_id" ref="res_groups_privilege_ienel_asset"/>
         <field name="implied_ids" eval="[(4, ref('group_ienel_asset_manager'))]"/>
         <field name="comment">Acceso completo de gestión, configuración y administración de activos fijos.</field>
     </record>
