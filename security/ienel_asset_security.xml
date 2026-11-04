@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Categoría del Módulo -->
-    <record id="module_category_ienel_asset" model="ir.module.category">
-        <field name="name">Activos Fijos</field>
-        <field name="description">Gestión de accesos y roles para el módulo de Activos Fijos de IENEL</field>
-        <field name="sequence">20</field>
-    </record>
-
-    <!-- Rol 1: Usuario -->
+    <!-- 1. Definición de los Roles / Grupos de Seguridad -->
     <record id="group_ienel_asset_user" model="res.groups">
         <field name="name">Usuario</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="comment">Acceso de lectura e interacción básica para usuarios de activos fijos.</field>
     </record>
 
-    <!-- Rol 2: Encargado de Activos Fijos -->
     <record id="group_ienel_asset_manager" model="res.groups">
         <field name="name">Encargado de Activos Fijos</field>
         <field name="implied_ids" eval="[(4, ref('group_ienel_asset_user'))]"/>
         <field name="comment">Gestión operativa del módulo y destinatario de alertas de mantenimientos y calibraciones.</field>
     </record>
 
-    <!-- Rol 3: Administrador -->
     <record id="group_ienel_asset_admin" model="res.groups">
         <field name="name">Administrador</field>
         <field name="implied_ids" eval="[(4, ref('group_ienel_asset_manager'))]"/>
         <field name="comment">Acceso completo de gestión, configuración y administración de activos fijos.</field>
+    </record>
+
+    <!-- 2. Categoría del Módulo (Vincula los grupos para dibujarlos en la ficha de Usuarios) -->
+    <record id="module_category_ienel_asset" model="ir.module.category">
+        <field name="name">Activos Fijos</field>
+        <field name="description">Gestión de accesos y roles para el módulo de Activos Fijos de IENEL</field>
+        <field name="sequence">20</field>
+        <field name="group_ids" eval="[(4, ref('group_ienel_asset_user')), (4, ref('group_ienel_asset_manager')), (4, ref('group_ienel_asset_admin'))]"/>
     </record>
 
 </odoo>
