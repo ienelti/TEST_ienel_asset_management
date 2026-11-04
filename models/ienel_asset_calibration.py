@@ -5,6 +5,7 @@ import re
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -29,9 +30,11 @@ class IenelAssetCalibration(models.Model):
         tracking=True
     )
     next_calibration_date = fields.Date(
-        string='Próxima Fecha de Calibración',
-        required=True,
-        help='Fecha programada para la siguiente calibración.',
+        string='Próxima fecha de Calibración',
+        compute='_compute_next_calibration_date',
+        store=True,
+        readonly=True,
+        help='Fecha programada automáticamente a 1 año para la siguiente calibración.',
         tracking=True
     )
     cost = fields.Float(
@@ -158,3 +161,11 @@ class IenelAssetCalibration(models.Model):
             'url': f'/ienel_asset/calibration/{self.id}/preview',
             'target': 'new',
         }
+    
+    @api.depends('calibration_date')
+    def _compute_next_calibration_date(self):
+        for rec in self:
+            if rec.calibration_date:
+                rec.next_calibration_date = rec.calibration_date + relativedelta(years=1)
+            else:
+                rec.next_calibration_date = False
