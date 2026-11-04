@@ -12,6 +12,7 @@
         'TEST_ienel_onedrive_store',
     ],
     'data': [
+        'security/ienel_asset_security.xml',
         'security/ir.model.access.csv',
         'data/ienel_asset_document_type_data.xml',
         'views/ienel_asset_views.xml',
