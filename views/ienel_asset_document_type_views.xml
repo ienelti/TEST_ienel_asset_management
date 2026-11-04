@@ -18,11 +18,4 @@
         <field name="res_model">ienel.asset.document.type</field>
         <field name="view_mode">list,form</field>
     </record>
-
-    <!-- Menú en Configuración -->
-    <menuitem id="menu_ienel_asset_document_type"
-              name="Tipos de Documento"
-              parent="menu_ienel_asset_config"
-              action="action_ienel_asset_document_type"
-              sequence="20"/>
 </odoo>
