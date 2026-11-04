@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Menú Raíz -->
-    <menuitem id="menu_ienel_asset_root" name="Activos Fijos" sequence="10"/>
+    <menuitem id="menu_ienel_asset_root" name="Activos Fijos" groups="TEST_ienel_asset_management.group_ienel_asset_user" sequence="10"/>
 
     <!-- Pestaña Principal: Tablero -->
     <menuitem id="menu_ienel_asset_dashboard" name="Tablero" parent="menu_ienel_asset_root" action="action_ienel_asset_dashboard" sequence="5"/>
