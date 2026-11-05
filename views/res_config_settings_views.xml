@@ -49,7 +49,7 @@
         <field name="name">Ajustes de Activos Fijos</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
-        <field name="target">inline</field>
+        <field name="target">current</field>
         <field name="context">{'module': 'TEST_ienel_asset_management', 'bin_size': False}</field>
     </record>
 
