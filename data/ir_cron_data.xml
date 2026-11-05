@@ -6,10 +6,8 @@
             <field name="name">Activos Fijos: Evaluación Diaria de Alertas de Mantenimientos y Calibraciones</field>
             <field name="model_id" ref="model_ienel_asset_maintenance"/>
             <field name="state">code</field>
-            <field name="code">
-                env['ienel.asset.maintenance']._cron_check_alerts()
-                env['ienel.asset.calibration']._cron_check_alerts()
-            </field>
+            <field name="code">env['ienel.asset.maintenance']._cron_check_alerts()
+env['ienel.asset.calibration']._cron_check_alerts()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
