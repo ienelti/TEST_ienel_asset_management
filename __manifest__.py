@@ -15,6 +15,7 @@
         'security/ienel_asset_security.xml',
         'security/ir.model.access.csv',
         'data/ienel_asset_document_type_data.xml',
+        'data/ir_cron_data.xml',
         'views/ienel_asset_views.xml',
         'views/ienel_asset_type_views.xml',
         'views/ienel_asset_document_type_views.xml',

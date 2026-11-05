@@ -221,3 +221,56 @@ class IenelAssetMaintenance(models.Model):
                 'alert_3_sent': False,
             })
         return super().write(vals)
+    
+    @api.model
+    def _cron_check_alerts(self):
+        ICPSudo = self.env['ir.config_parameter'].sudo()
+        enabled = ICPSudo.get_param('TEST_ienel_asset_management.enable_asset_alerts', 'True')
+        if str(enabled).lower() not in ('true', '1', 't'):
+            return
+
+        today = fields.Date.today()
+        records = self.search([('next_maintenance_date', '!=', False)])
+        group_manager = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_manager')
+        group_admin = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_admin')
+        recipients = (group_manager.users | group_admin.users).filtered(lambda u: u.active)
+        if not recipients:
+            return
+
+        activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+        activity_type_id = activity_type.id if activity_type else False
+
+        for rec in records:
+            delta_days = (rec.next_maintenance_date - today).days
+            d1 = rec.alert_days_1 if rec.custom_alerts else int(ICPSudo.get_param('TEST_ienel_asset_management.alert_days_1', 30) or 30)
+            d2 = rec.alert_days_2 if rec.custom_alerts else int(ICPSudo.get_param('TEST_ienel_asset_management.alert_days_2', 15) or 15)
+            d3 = rec.alert_days_3 if rec.custom_alerts else int(ICPSudo.get_param('TEST_ienel_asset_management.alert_days_3', 2) or 2)
+
+            alerts_to_trigger = []
+            if delta_days <= d1 and not rec.alert_1_sent:
+                alerts_to_trigger.append(('1_sent', d1, "1.ª Alerta"))
+            if delta_days <= d2 and not rec.alert_2_sent:
+                alerts_to_trigger.append(('2_sent', d2, "2.ª Alerta"))
+            if delta_days <= d3 and not rec.alert_3_sent:
+                alerts_to_trigger.append(('3_sent', d3, "3.ª Alerta (Urgente)"))
+
+            for sent_attr, days_val, label in alerts_to_trigger:
+                asset_name = rec.asset_id.name if rec.asset_id else ''
+                summary = f"Mantenimiento Próximo ({label}): {asset_name}"
+                note = (
+                    f"El mantenimiento del activo {asset_name} "
+                    f"está programado para el {rec.next_maintenance_date} "
+                    f"(faltan {delta_days} días)."
+                )
+                for user in recipients:
+                    self.env['mail.activity'].create({
+                        'activity_type_id': activity_type_id,
+                        'summary': summary,
+                        'note': note,
+                        'res_id': rec.id,
+                        'res_model_id': self.env['ir.model']._get_id('ienel.asset.maintenance'),
+                        'user_id': user.id,
+                        'date_deadline': rec.next_maintenance_date,
+                    })
+                rec.message_post(body=f"🔔 {label} enviada: {note}")
+                setattr(rec, f'alert_{sent_attr}', True)
