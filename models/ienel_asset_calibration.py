@@ -230,9 +230,23 @@ class IenelAssetCalibration(models.Model):
 
         today = fields.Date.today()
         records = self.search([('next_calibration_date', '!=', False)])
-        group_manager = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_manager')
-        group_admin = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_admin')
-        recipients = (group_manager.users | group_admin.users).filtered(lambda u: u.active)
+
+        group_manager = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_manager', raise_if_not_found=False)
+        group_admin = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_admin', raise_if_not_found=False)
+
+        group_ids = []
+        if group_manager:
+            group_ids.append(group_manager.id)
+        if group_admin:
+            group_ids.append(group_admin.id)
+
+        if not group_ids:
+            return
+
+        recipients = self.env['res.users'].search([
+            ('groups_id', 'in', group_ids),
+            ('active', '=', True)
+        ])
         if not recipients:
             return
 
