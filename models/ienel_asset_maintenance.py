@@ -235,19 +235,13 @@ class IenelAssetMaintenance(models.Model):
         group_manager = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_manager', raise_if_not_found=False)
         group_admin = self.env.ref('TEST_ienel_asset_management.group_ienel_asset_admin', raise_if_not_found=False)
 
-        group_ids = []
+        recipients = self.env['res.users']
         if group_manager:
-            group_ids.append(group_manager.id)
+            recipients |= group_manager.user_ids
         if group_admin:
-            group_ids.append(group_admin.id)
+            recipients |= group_admin.user_ids
 
-        if not group_ids:
-            return
-
-        recipients = self.env['res.users'].search([
-            ('groups_id', 'in', group_ids),
-            ('active', '=', True)
-        ])
+        recipients = recipients.filtered(lambda u: u.active)
         if not recipients:
             return
 
