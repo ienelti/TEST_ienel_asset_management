@@ -19,6 +19,6 @@
     <!-- Pestaña Principal: Configuración -->
     <menuitem id="menu_ienel_asset_config" name="Configuración" parent="menu_ienel_asset_root" groups="TEST_ienel_asset_management.group_ienel_asset_admin" sequence="50"/>
     <menuitem id="menu_ienel_asset_config_settings" name="Ajustes" parent="menu_ienel_asset_config" action="action_ienel_asset_config_settings" sequence="10"/>
-    <menuitem id="menu_ienel_asset_type" name="Tipos de activos" parent="menu_ienel_asset_config" action="action_ienel_asset_type" sequence="10"/>
-    <menuitem id="menu_ienel_asset_document_type" name="Tipos de Documento" parent="menu_ienel_asset_config" action="action_ienel_asset_document_type" sequence="20"/>
+    <menuitem id="menu_ienel_asset_type" name="Tipos de activos" parent="menu_ienel_asset_config" action="action_ienel_asset_type" sequence="20"/>
+    <menuitem id="menu_ienel_asset_document_type" name="Tipos de Documento" parent="menu_ienel_asset_config" action="action_ienel_asset_document_type" sequence="30"/>
 </odoo>
