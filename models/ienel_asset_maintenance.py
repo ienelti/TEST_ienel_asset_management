@@ -170,3 +170,54 @@ class IenelAssetMaintenance(models.Model):
             'url': f'/ienel_asset/maintenance/{self.id}/preview',
             'target': 'new',
         }
+    
+    # --- GESTIÓN DE ALERTAS ---
+    def _get_default_alert_days(self, param_key, default_val):
+        ICPSudo = self.env['ir.config_parameter'].sudo()
+        val = ICPSudo.get_param(f'TEST_ienel_asset_management.{param_key}')
+        try:
+            return int(val) if val is not None and val != '' else default_val
+        except (ValueError, TypeError):
+            return default_val
+
+    custom_alerts = fields.Boolean(
+        string='Personalizar Alertas',
+        default=False,
+        help='Si se activa, permite definir días de alerta específicos para este registro en lugar de los globales.'
+    )
+    alert_days_1 = fields.Integer(
+        string='1.ª Alerta (Días antes)',
+        default=lambda self: self._get_default_alert_days('alert_days_1', 30),
+        help='Días de anticipación para la primera alerta.'
+    )
+    alert_days_2 = fields.Integer(
+        string='2.ª Alerta (Días antes)',
+        default=lambda self: self._get_default_alert_days('alert_days_2', 15),
+        help='Días de anticipación para la segunda alerta.'
+    )
+    alert_days_3 = fields.Integer(
+        string='3.ª Alerta (Días antes)',
+        default=lambda self: self._get_default_alert_days('alert_days_3', 2),
+        help='Días de anticipación para la tercera alerta (urgente).'
+    )
+
+    # Control de alertas emitidas
+    alert_1_sent = fields.Boolean(string='Alerta 1 Enviada', default=False)
+    alert_2_sent = fields.Boolean(string='Alerta 2 Enviada', default=False)
+    alert_3_sent = fields.Boolean(string='Alerta 3 Enviada', default=False)
+
+    @api.onchange('custom_alerts')
+    def _onchange_custom_alerts(self):
+        if not self.custom_alerts:
+            self.alert_days_1 = self._get_default_alert_days('alert_days_1', 30)
+            self.alert_days_2 = self._get_default_alert_days('alert_days_2', 15)
+            self.alert_days_3 = self._get_default_alert_days('alert_days_3', 2)
+
+    def write(self, vals):
+        if 'next_maintenance_date' in vals:
+            vals.update({
+                'alert_1_sent': False,
+                'alert_2_sent': False,
+                'alert_3_sent': False,
+            })
+        return super().write(vals)

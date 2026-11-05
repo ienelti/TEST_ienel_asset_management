@@ -37,6 +37,16 @@
                             <button name="action_open_internal_preview" string="Ver Soporte" type="object" icon="fa-eye" invisible="not onedrive_item_id"/>
                         </group>
                     </group>
+                    <group string="Gestión de Alertas">
+                        <group>
+                            <field name="custom_alerts"/>
+                        </group>
+                        <group>
+                            <field name="alert_days_1" readonly="not custom_alerts"/>
+                            <field name="alert_days_2" readonly="not custom_alerts"/>
+                            <field name="alert_days_3" readonly="not custom_alerts"/>
+                        </group>
+                    </group>
                     <group string="Observaciones">
                         <field name="notes" placeholder="Escriba aquí detalles de la calibración realizada, laboratorio, patrón usado, etc." nolabel="1" colspan="2"/>
                     </group>
